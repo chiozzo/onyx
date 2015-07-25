@@ -1,0 +1,39 @@
+* {
+  border: 1px dashed red;
+  margin: 0;
+  padding: 0;
+}
+
+.name h1,
+.name h3,
+.name h5 {
+  margin: 1%;
+}
+
+header {
+  text-align: center;
+  color: lightgrey;
+  background-color: black;
+  border-bottom: 3px solid lightgrey;
+}
+
+nav ul {
+  background-color: black;
+  font-weight: bold;
+  list-style: none;
+  margin-bottom: 0;
+}
+
+nav li {
+  padding: 1%;
+  display: inline-block;
+  border-top: 2px solid lightgrey;
+  border-right: 2px solid lightgrey;
+  border-left: 2px solid lightgrey;
+}
+
+nav li.selected {
+  color: black;
+  background-color: darkgrey;
+  border-bottom-color: white;
+}
