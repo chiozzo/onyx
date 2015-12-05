@@ -1,0 +1,32 @@
+<div class="container">
+	<div class="row well">
+		<label class="col-md-12">receivedDT</label>
+		<div class="input-group col-md-2">
+			<input type="text" class="form-control" datepicker-popup="{{format}}" name="receivedDate" ng-model="receivedDate" is-open="dateStatus.receivedDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+			<span class="input-group-btn">
+				<button class="btn btn-default" ng-click="toggleOpen($event,'receivedDate')">
+					<i class="glyphicon glyphicon-calendar"></i>
+				</button>
+			</span>
+		</div>
+		<div class="col-md-2">
+			<uib-timepicker ng-model="receivedTime" ng-change="changed()" hour-step=1 minute-step=10 show-meridian=true></uib-timepicker>
+		</div>
+	</div>
+
+
+	<div class="row well">
+		<label class="col-md-12">decisionDT</label>
+		<div class="input-group col-md-2">
+			<input type="text" class="form-control" datepicker-popup="{{format}}" name="decisionDate" ng-model="decisionDate" is-open="dateStatus.decisionDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+			<span class="input-group-btn">
+				<button class="btn btn-default" ng-click="toggleOpen($event,'decisionDate')">
+					<i class="glyphicon glyphicon-calendar"></i>
+				</button>
+			</span>
+		</div>
+		<div class="col-md-2">
+			<uib-timepicker ng-model="decisionTime" ng-change="changed()" hour-step=1 minute-step=10 show-meridian=true></uib-timepicker>
+		</div>
+	</div>
+</div>
