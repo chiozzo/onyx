@@ -13,43 +13,72 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
 
-  console.log('Onyx is live!');
-
   var today = new Date();
 
-  $scope.userInput = {
+  $scope.caseStatus = {
     receivedDate: null,
     decisionDate: null,
-    notificationDate: null
-  };
-
-  $scope.caseStatus = {
+    effectuationDate: null,
+    notificationDate: null,
+    supSDate: null,
     timelyDecision: null,
+    timelyEffectution: null,
     timelyNotification: null,
+    timelySS: null,
     caseType: 'CD',
     caseExpedited: null,
+    decision: "Pending",
     dueDate: null,
     SLA: null,
-    extend24: false
+    exceptionRequest: "What's an exception?",
+    extendedApproval: false
   };
 
   $scope.calcTimelyDecision = function(){
-    var receivedDate = $scope.userInput.receivedDate;
-    var decisionDate = $scope.userInput.decisionDate;
+    var receivedDate = null;
+    var decisionDate = $scope.caseStatus.decisionDate;
     var expedited = $scope.caseStatus.caseExpedited;
-    if(expedited === true){
-      $scope.caseStatus.SLA = 86400000;
-    } else if(expedited === false){
-      $scope.caseStatus.SLA = 259200000;
+    var SLA = $scope.caseStatus.SLA;
+
+    if ($scope.caseStatus.exceptionRequest === 'Yes') {
+      receivedDate = $scope.caseStatus.supSDate;
+    } else {
+      receivedDate = $scope.caseStatus.receivedDate;
     }
+
     if(decisionDate !== null && receivedDate !== null) {
-      var timely = decisionDate - receivedDate;
-      if(timely >= 0 && timely <= $scope.caseStatus.SLA){
+      var timeliness = decisionDate - receivedDate;
+      if(timeliness >= 0 && timeliness <= SLA){
         $scope.caseStatus.timelyDecision = true;
-        console.log("timely", timely, $scope.caseStatus.timelyDecision);
+        console.log("timeliness", timeliness, $scope.caseStatus.timelyDecision);
       } else {
         $scope.caseStatus.timelyDecision = false;
-        console.log("timely", timely, $scope.caseStatus.timelyDecision);
+        console.log("timeliness", timeliness, $scope.caseStatus.timelyDecision);
+      }
+    }
+  };
+
+  $scope.calcTimelyEffectuation = function(){
+    console.log('calcTimelyEffectuation() run');
+
+    var receivedDate = null;
+    var effectuationDate = $scope.caseStatus.effectuationDate;
+    var SLA = $scope.caseStatus.SLA;
+
+    if ($scope.caseStatus.exceptionRequest === 'Yes') {
+      receivedDate = $scope.caseStatus.supSDate;
+    } else {
+      receivedDate = $scope.caseStatus.receivedDate;
+    }
+
+    if(effectuationDate !== null && receivedDate !== null) {
+      var timeliness = effectuationDate - receivedDate;
+      if(timeliness >= 0 && timeliness <= SLA){
+        $scope.caseStatus.timelyEffectution = true;
+        console.log("timeliness", timeliness, $scope.caseStatus.timelyEffectution);
+      } else {
+        $scope.caseStatus.timelyEffectution = false;
+        console.log("timeliness", timeliness, $scope.caseStatus.timelyEffectution);
       }
     }
   };
@@ -58,22 +87,24 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
 
 
   $scope.calcTimelyNotification = function(){
-    var receivedDate = $scope.userInput.receivedDate;
-    var notificationDate = $scope.userInput.notificationDate;
-    var expedited = $scope.caseStatus.caseExpedited;
-    if(expedited === true){
-      $scope.caseStatus.SLA = 86400000;
-    } else if(expedited === false){
-      $scope.caseStatus.SLA = 259200000;
+    var receivedDate = null;
+    var notificationDate = $scope.caseStatus.notificationDate;
+    var SLA = $scope.caseStatus.SLA;
+
+    if ($scope.caseStatus.exceptionRequest === 'Yes') {
+      receivedDate = $scope.caseStatus.supSDate;
+    } else {
+      receivedDate = $scope.caseStatus.receivedDate;
     }
+
     if(notificationDate !== null && receivedDate !== null) {
-      var timely = notificationDate - receivedDate;
-      if(timely >= 0 && timely <= $scope.caseStatus.SLA){
+      var timeliness = notificationDate - receivedDate;
+      if(timeliness >= 0 && timeliness <= SLA){
         $scope.caseStatus.timelyNotification = true;
-        console.log("timely", timely, $scope.caseStatus.timelyNotification);
+        console.log("timeliness", timeliness, $scope.caseStatus.timelyNotification);
       } else {
         $scope.caseStatus.timelyNotification = false;
-        console.log("timely", timely, $scope.caseStatus.timelyNotification);
+        console.log("timeliness", timeliness, $scope.caseStatus.timelyNotification);
       }
     }
   };
@@ -81,11 +112,28 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
   $scope.setDueDate = function(){
     var caseType = $scope.caseStatus.caseType;
     var expedited = $scope.caseStatus.caseExpedited;
-    if(caseType === 'CD' && expedited === false) {
-      $scope.caseStatus.dueDate = new Date($scope.userInput.receivedDate.getTime() + 259200000);
-    } else if(caseType === 'CD' && expedited === true) {
-      $scope.caseStatus.dueDate = new Date($scope.userInput.receivedDate.getTime() + 86400000);
+    var receivedDate = null;
+
+    if ($scope.caseStatus.exceptionRequest === 'Yes') {
+      receivedDate = $scope.caseStatus.supSDate.getTime();
+    } else {
+      receivedDate = $scope.caseStatus.receivedDate.getTime();
     }
+
+    if(expedited === true){
+      $scope.caseStatus.SLA = 86400000;
+    } else if(expedited === false){
+      $scope.caseStatus.SLA = 259200000;
+    }
+
+    if(caseType === 'CD') {
+      if (expedited === false) {
+        $scope.caseStatus.dueDate = new Date(receivedDate + 259200000);
+      } else if (expedited === true) {
+        $scope.caseStatus.dueDate = new Date(receivedDate + 86400000);
+      }
+    }
+
     $scope.calcTimelyDecision();
     $scope.calcTimelyNotification();
   };
