@@ -8,7 +8,7 @@
 		</div>
 		<div class="col-md-3">
 			<h3>Is this an Exception?</h3>
-			<button type="button" class="btn btn-primary" ng-model="caseStatus.exceptionRequest" uib-btn-checkbox btn-checkbox-true="'Yes'" btn-checkbox-false="'No'" ng-change="setDueDate()">{{caseStatus.exceptionRequest}}</button>
+			<button type="button" class="btn btn-primary" ng-model="caseStatus.exceptionRequest" uib-btn-checkbox btn-checkbox-true="'YES'" btn-checkbox-false="'NO'" ng-change="setDueDate()">{{caseStatus.exceptionRequest}}</button>
 		</div>
 		<div class="col-md-3">
 			<h3>Approved?</h3>
@@ -28,16 +28,16 @@
 		<div class="col-md-6">
 			<div class="well">
 			  <label for="receivedDateInput" class="col-md-6">Received Date/Time</label>
-			  <input type="datetime-local" class="col-md-6" id="receivedDateInput" name="receivedDateInput" ng-model="caseStatus.receivedDate" ng-change="setDueDate()">
+			  <input type="datetime-local" class="col-md-6" id="receivedDateInput" name="receivedDateInput" ng-model="caseStatus.receivedDate" ng-change="setDueDate()" min="2001-01-01T00:00" max="2020-12-31T00:00">
 			  <tt>receivedDate = {{caseStatus.receivedDate | date: "MMddyyyy HHmmss"}}</tt><br/>
 				</div>
 			</div>
-			<div class="col-md-6" ng-show="caseStatus.exceptionRequest === 'Yes'">
+			<div class="col-md-6" ng-show="caseStatus.exceptionRequest === 'YES'">
 				<div class="well">
-			  <label for="supSDateInput" class="col-md-6">Supporting Statement Date/Time</label>
-			  <input type="datetime-local" class="col-md-6" id="supSDateInput" name="supSDateInput" ng-model="caseStatus.supSDate" ng-change="setDueDate()">
+			  <label for="ssDateInput" class="col-md-6">Supporting Statement Date/Time</label>
+			  <input type="datetime-local" class="col-md-6" id="ssDateInput" name="ssDateInput" ng-model="caseStatus.ssDate" ng-change="setDueDate()">
 			  <div role="alert">
-			    <div class="alert alert-danger" role="alert" ng-show="caseForm.supSDateInput.$error.datetimelocal">
+			    <div class="alert alert-danger" role="alert" ng-show="caseForm.ssDateInput.$error.datetimelocal">
 			        Not a valid date!</div>
 			  </div>
 			</div>
@@ -64,14 +64,14 @@
 		<div class="col-md-6">
 			<div class="well">
 			  <label for="effectuationDateInput" class="col-md-6">Effectuation Date/Time</label>
-			  <input type="datetime-local" class="col-md-6" id="effectuationDateInput" name="effectuationDateInput" ng-model="caseStatus.effectuationDate" ng-change="calcTimelyEffectuation()">
+			  <input type="datetime-local" class="col-md-6" id="effectuationDateInput" name="effectuationDateInput" ng-model="caseStatus.effectuationDate" ng-change="calcTimelyEffectuation()" min="2001-01-01T00:00" max="2020-12-31T00:00">
 			  <div role="alert">
 			    <div class="alert alert-danger" role="alert" ng-show="caseForm.effectuationDateInput.$error.datetimelocal">
 			        Not a valid date!</div>
-					<span class="label label-success col-md-12" ng-show="caseStatus.timelyEffectution">
+					<span class="label label-success col-md-12" ng-show="caseStatus.timelyEffectuation">
 						Your effectuation was timely <i class="glyphicon glyphicon-ok"></i>
 					</span>
-					<span class="label label-warning col-md-12" ng-show="!caseStatus.timelyEffectution">
+					<span class="label label-warning col-md-12" ng-show="!caseStatus.timelyEffectuation">
 						Your effectuation doesn't look timely <i class="glyphicon glyphicon-warning-sign"></i>
 					</span>
 			  </div>
@@ -79,29 +79,57 @@
 		</div>
 		<div class="col-md-6">
 			<div class="well">
-			  <label for="notificationDateInput" class="col-md-6">Notification Date/Time</label>
-			  <input type="datetime-local" class="col-md-6" id="notificationDateInput" name="notificationDate" ng-model="caseStatus.notificationDate" ng-change="calcTimelyNotification()" min="2001-01-01T00:00" max="2020-12-31T00:00" required />
+			  <label for="writtenNotificationDateInput" class="col-md-6">Written Notification Date/Time</label>
+			  <input type="datetime-local" class="col-md-6" id="writtenNotificationDateInput" name="writtenNotificationDate" ng-model="caseStatus.writtenNotificationDate" ng-change="calcTimelyWrittenNotification()" min="2001-01-01T00:00" max="2020-12-31T00:00" required />
 			  <div role="alert">
-			    <div class="alert alert-danger" role="alert" ng-show="caseForm.notificationDate.$error.required">
+			    <div class="alert alert-danger" role="alert" ng-show="caseForm.writtenNotificationDate.$error.required">
 			        Required!</div>
-			    <div class="alert alert-danger" role="alert" ng-show="caseForm.notificationDate.$error.datetimelocal">
+			    <div class="alert alert-danger" role="alert" ng-show="caseForm.writtenNotificationDate.$error.datetimelocal">
 			        Not a valid date!</div>
-	        <span class="label label-success col-md-12" ng-show="caseStatus.timelyNotification">
+	        <span class="label label-success col-md-12" ng-show="caseStatus.timelyWrittenNotification">
 						Your notification was timely <i class="glyphicon glyphicon-ok"></i>
 					</span>
-					<span class="label label-warning col-md-12" ng-show="!caseStatus.timelyNotification">
+					<span class="label label-warning col-md-12" ng-show="!caseStatus.timelyWrittenNotification">
 						Your notification doesn't look timely <i class="glyphicon glyphicon-warning-sign"></i>
 					</span>
 			  </div>
-			  <tt>notificationDate = {{caseStatus.notificationDate | date: "yyyy-MM-ddTHH:mm"}}</tt><br/>
-			  <tt>caseForm.notificationDate.$valid = {{caseForm.notificationDate.$valid}}</tt><br/>
-			  <tt>caseForm.notificationDate.$error = {{caseForm.notificationDate.$error}}</tt><br/>
+			  <tt>writtenNotificationDate = {{caseStatus.writtenNotificationDate | date: "yyyy-MM-ddTHH:mm"}}</tt><br/>
+			  <tt>caseForm.writtenNotificationDate.$valid = {{caseForm.writtenNotificationDate.$valid}}</tt><br/>
+			  <tt>caseForm.writtenNotificationDate.$error = {{caseForm.writtenNotificationDate.$error}}</tt><br/>
+			  <tt>caseForm.$valid = {{caseForm.$valid}}</tt><br/>
+			  <tt>caseForm.$error.required = {{!!caseForm.$error.required}}</tt><br/>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="well">
+			  <label for="oralNotificationDateInput" class="col-md-6">Oral Notification Date/Time</label>
+			  <input type="datetime-local" class="col-md-6" id="oralNotificationDateInput" name="oralNotificationDate" ng-model="caseStatus.oralNotificationDate" ng-change="calcTimelyOralNotification()" min="2001-01-01T00:00" max="2020-12-31T00:00" required />
+			  <div role="alert">
+			    <div class="alert alert-danger" role="alert" ng-show="caseForm.oralNotificationDate.$error.required">
+			        Required!</div>
+			    <div class="alert alert-danger" role="alert" ng-show="caseForm.oralNotificationDate.$error.datetimelocal">
+			        Not a valid date!</div>
+	        <span class="label label-success col-md-12" ng-show="caseStatus.timelyOralNotification">
+						Your notification was timely <i class="glyphicon glyphicon-ok"></i>
+					</span>
+					<span class="label label-warning col-md-12" ng-show="!caseStatus.timelyOralNotification">
+						Your notification doesn't look timely <i class="glyphicon glyphicon-warning-sign"></i>
+					</span>
+			  </div>
+			  <tt>oralNotificationDate = {{caseStatus.oralNotificationDate | date: "yyyy-MM-ddTHH:mm"}}</tt><br/>
+			  <tt>caseForm.oralNotificationDate.$valid = {{caseForm.oralNotificationDate.$valid}}</tt><br/>
+			  <tt>caseForm.oralNotificationDate.$error = {{caseForm.oralNotificationDate.$error}}</tt><br/>
 			  <tt>caseForm.$valid = {{caseForm.$valid}}</tt><br/>
 			  <tt>caseForm.$error.required = {{!!caseForm.$error.required}}</tt><br/>
 			</div>
 		</div>
 	</form>
 	<div class="row well" ng-show="caseStatus.dueDate">
-		  <h4>This case must have been closed by {{caseStatus.dueDate | date: "fullDate"}}</h4>
+		  <h4 class="col-md-6">This case must have been closed by {{caseStatus.dueDate | date: "medium"}}</h4>
+			<div class="col-md-6" ng-show="caseStatus.decision === 'Approved'">
+				<label for="extendedApprovalInput">Would you like to evaluate timeliness based on Approval within 24 hours?</label>
+				<button type="button" class="btn btn-primary" ng-model="caseStatus.extendApproval" uib-btn-checkbox btn-checkbox-true="'YES'" btn-checkbox-false="'NO'" ng-change="setDueDate()">{{caseStatus.extendApproval}}</button>
+				<input type="checkbox" ng-model="caseStatus.extendApproval" ng-true-value="'YES'" ng-false-value="'NO'">
+			</div>
 	</div>
 </div>
