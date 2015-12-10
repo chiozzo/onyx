@@ -13,18 +13,40 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
 
+  var hours24 = 86400000;
+  var hours72 = 259200000;
+  var days7   = 604800000;
+  var days14  = 1209600000;
+  var expeditedCDSLA = hours24;
+  var standardCDSLA = hours72;
+  var expeditedRDSLA = hours72;
+  var standardRDSLA = days7;
+  var DMRSLA = days14;
   var today = new Date();
+
+  $scope.restrictInput = null;
+
+  $scope.makeRestrictions = function() {
+    $scope.restrictInput = {
+      receivedMinDate: new Date(today.getTime() - days7),
+      //Could this next line be a problem if the user stays logged in for many days?
+      receivedMaxDate: new Date(today.getTime() + hours24)
+    };
+  };
+  $scope.makeRestrictions();
+
 
   $scope.caseStatus = {
     receivedDate: null,
+    ssDate: null,
     decisionDate: null,
     effectuationDate: null,
     writtenNotificationDate: null,
-    ssDate: null,
+    oralNotificationDate: null,
     timelyDecision: null,
     timelyEffectuation: null,
     timelyWrittenNotification: null,
-    timelySS: null,
+    timelyOralNotification: null,
     caseType: 'CD',
     casePriority: null,
     decision: 'Pending',
@@ -103,6 +125,27 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
     }
   };
 
+  $scope.calcTimelyOralNotification = function() {
+    var receivedDate = null;
+    var oralNotificationDate = $scope.caseStatus.oralNotificationDate;
+    var SLA = $scope.caseStatus.SLA;
+
+    if ($scope.caseStatus.exceptionRequest === 'YES') {
+      receivedDate = $scope.caseStatus.ssDate;
+    } else {
+      receivedDate = $scope.caseStatus.receivedDate;
+    }
+
+    if(oralNotificationDate !== null && receivedDate !== null) {
+      var timeliness = oralNotificationDate - receivedDate;
+      if(timeliness >= 0 && timeliness <= SLA) {
+        $scope.caseStatus.timelyOralNotification = true;
+      } else {
+        $scope.caseStatus.timelyOralNotification = false;
+      }
+    }
+  };
+
   $scope.setDueDate = function() {
     var caseType = $scope.caseStatus.caseType;
     var expedited = $scope.caseStatus.casePriority;
@@ -113,33 +156,39 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
       receivedDate = $scope.caseStatus.ssDate.getTime();
     } else {
       receivedDate = $scope.caseStatus.receivedDate.getTime();
+      $scope.caseStatus.ssDate = null;
     }
 
     if(caseType === 'CD') {
       if (expedited === 'Expedited') {
-        $scope.caseStatus.SLA = 86400000;
+        $scope.caseStatus.SLA = expeditedCDSLA;
       } else if (expedited === 'Standard') {
-        $scope.caseStatus.SLA = 259200000;
+        $scope.caseStatus.SLA = standardCDSLA;
       }
-      if(extendedApproval === 'YES') {
-        $scope.caseStatus.SLA = $scope.caseStatus.SLA + 259200000;
+      if($scope.caseStatus.SLA !== null) {
+        if(extendedApproval === 'YES') {
+          $scope.caseStatus.SLA = $scope.caseStatus.SLA + hours24;
+        }
+        $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
       }
-      $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
     } else if (caseType === 'RD') {
-      $scope.caseStatus.dueDate = null;
       if (expedited === 'Expedited') {
-        $scope.caseStatus.SLA = 259200000;
+        $scope.caseStatus.SLA = expeditedRDSLA;
       } else if (expedited === 'Standard') {
-        $scope.caseStatus.SLA = 604800000;
+        $scope.caseStatus.SLA = standardRDSLA;
+      } else {
+        $scope.caseStatus.SLA = null;
       }
-      $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
-      $scope.caseStatus.dueDate = $scope.caseStatus.dueDate.setHours(23,59,59,999);
-      if(extendedApproval === 'YES') {
-        $scope.caseStatus.SLA = $scope.caseStatus.SLA + 259200000;
+      if($scope.caseStatus.SLA !== null) {
+        if(extendedApproval === 'YES') {
+          $scope.caseStatus.SLA = $scope.caseStatus.SLA + hours24;
+        }
+        $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
+        $scope.caseStatus.dueDate = $scope.caseStatus.dueDate.setHours(23,59,59,999);
       }
     } else if (caseType === 'DMR') {
       $scope.caseStatus.casePriority = null;
-      $scope.caseStatus.SLA = 1209600000;
+      $scope.caseStatus.SLA = days14;
       $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
       $scope.caseStatus.dueDate = $scope.caseStatus.dueDate.setHours(23,59,59,999);
     }
