@@ -13,6 +13,35 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
 
+  $scope.fileUpload = null;
+
+  $scope.uploadFile = function  () {
+
+
+
+/**
+ * This function is a copy pasta job and I'm not entirely sure how it works yet.
+ */
+    var f = document.getElementById('file').files,
+        r = new FileReader();
+    console.log("f", f);
+    console.log("r", r);
+    r.onloadend = function(e){
+      var data = e.target.result;
+      $scope.fileUpload = e.target.result;
+      //send you binary data via $http or $resource or do anything else with it
+      console.log("data", data);
+    };
+    r.readAsBinaryString(f);
+    // console.log("r.readAsBinaryString(f)", r.readAsBinaryString(f));
+
+
+
+
+    console.log('uploadFile run');
+    console.log("$scope.fileUpload", $scope.fileUpload);
+  };
+
   var hours24 = 86400000;
   var hours72 = 259200000;
   var days7   = 604800000;

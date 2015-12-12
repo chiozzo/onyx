@@ -1,5 +1,10 @@
 <div class="container">
 
+<div class="row">
+	<input type="file" id= "file" ng-model="fileUpload">
+	<button ng-click="uploadFile()">Import Universe</button>
+</div>
+
 	<div class="row well">
 		<div class="btn-group col-md-3" ng-hide="caseStatus.caseType === 'DMR'">
 			<h3>Case Priority</h3>
