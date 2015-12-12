@@ -157,18 +157,10 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
     }
   };
 
-  $scope.setDueDate = function() {
+  $scope.setDueDate = function(receivedDate) {
     var caseType = $scope.caseStatus.caseType;
     var priority = $scope.caseStatus.casePriority;
-    var receivedDate = null;
     var extendApproval = $scope.caseStatus.extendApproval;
-
-    if ($scope.caseStatus.exceptionRequest === 'YES') {
-      receivedDate = $scope.caseStatus.ssDate.getTime();
-    } else {
-      receivedDate = $scope.caseStatus.receivedDate.getTime();
-      $scope.caseStatus.ssDate = null;
-    }
 
     if(caseType === 'CD') {
       if (priority === 'Expedited') {
@@ -202,6 +194,23 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
       $scope.caseStatus.SLA = days14;
       $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
       $scope.caseStatus.dueDate = $scope.caseStatus.dueDate.setHours(23,59,59,999);
+    }
+  };
+
+  $scope.validateDueDate = function() {
+    var receivedDate = null;
+
+    if ($scope.caseStatus.exceptionRequest === 'YES') {
+      if($scope.caseStatus.ssDate !== null) {
+        receivedDate = $scope.caseStatus.ssDate.getTime();
+        $scope.setDueDate(receivedDate);
+      }
+    } else {
+      if($scope.caseStatus.receivedDate !== null) {
+        receivedDate = $scope.caseStatus.receivedDate.getTime();
+        $scope.caseStatus.ssDate = null;
+        $scope.setDueDate(receivedDate);
+      }
     }
 
     $scope.calcTimelyDecision();
