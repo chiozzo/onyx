@@ -53,7 +53,7 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
     dueDate: null,
     SLA: null,
     exceptionRequest: "What's an exception?",
-    extendedApproval: 'NO'
+    extendApproval: 'NO'
   };
 
   $scope.calcTimelyDecision = function() {
@@ -86,12 +86,14 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
     var effectuationDate = $scope.caseStatus.effectuationDate;
     var SLA = $scope.caseStatus.SLA;
 
+    // Determine the actual received date based on exception status
     if ($scope.caseStatus.exceptionRequest === 'YES') {
       receivedDate = $scope.caseStatus.ssDate;
     } else {
       receivedDate = $scope.caseStatus.receivedDate;
     }
 
+    // When effectuation and received dates are not null, flag effectuation timely or not
     if(effectuationDate !== null && receivedDate !== null) {
       var timeliness = effectuationDate - receivedDate;
       if(timeliness >= 0 && timeliness <= SLA){
@@ -101,6 +103,32 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
         $scope.caseStatus.timelyEffectuation = false;
         console.log("timeliness", timeliness, $scope.caseStatus.timelyEffectuation);
       }
+    }
+  };
+
+  $scope.calcTimelyOralNotification = function() {
+    var receivedDate = null;
+    var oralNotificationDate = $scope.caseStatus.oralNotificationDate;
+    var SLA = $scope.caseStatus.SLA;
+
+    // Determine the actual received date based on exception status
+    if ($scope.caseStatus.exceptionRequest === 'YES') {
+      receivedDate = $scope.caseStatus.ssDate;
+    } else {
+      receivedDate = $scope.caseStatus.receivedDate;
+    }
+
+    // When effectuation and received dates are not null, flag effectuation timely or not
+    if(oralNotificationDate !== null && receivedDate !== null) {
+      var timeliness = oralNotificationDate - receivedDate;
+      if(timeliness >= 0 && timeliness <= SLA) {
+        $scope.caseStatus.timelyOralNotification = true;
+      } else {
+        $scope.caseStatus.timelyOralNotification = false;
+      }
+    }
+    if($scope.caseStatus.writtenNotificationDate !== null) {
+      $scope.calcTimelyWrittenNotification();
     }
   };
 
@@ -115,6 +143,10 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
       receivedDate = $scope.caseStatus.receivedDate;
     }
 
+    if($scope.caseStatus.timelyOralNotification === true && ($scope.caseStatus.caseType === 'CD' || $scope.caseStatus.caseType === 'RD') && $scope.caseStatus.casePriority === 'Expedited') {
+      SLA += hours24;
+    }
+
     if(writtenNotificationDate !== null && receivedDate !== null) {
       var timeliness = writtenNotificationDate - receivedDate;
       if(timeliness >= 0 && timeliness <= SLA) {
@@ -125,32 +157,11 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
     }
   };
 
-  $scope.calcTimelyOralNotification = function() {
-    var receivedDate = null;
-    var oralNotificationDate = $scope.caseStatus.oralNotificationDate;
-    var SLA = $scope.caseStatus.SLA;
-
-    if ($scope.caseStatus.exceptionRequest === 'YES') {
-      receivedDate = $scope.caseStatus.ssDate;
-    } else {
-      receivedDate = $scope.caseStatus.receivedDate;
-    }
-
-    if(oralNotificationDate !== null && receivedDate !== null) {
-      var timeliness = oralNotificationDate - receivedDate;
-      if(timeliness >= 0 && timeliness <= SLA) {
-        $scope.caseStatus.timelyOralNotification = true;
-      } else {
-        $scope.caseStatus.timelyOralNotification = false;
-      }
-    }
-  };
-
   $scope.setDueDate = function() {
     var caseType = $scope.caseStatus.caseType;
-    var expedited = $scope.caseStatus.casePriority;
+    var priority = $scope.caseStatus.casePriority;
     var receivedDate = null;
-    var extendedApproval = $scope.caseStatus.extendedApproval;
+    var extendApproval = $scope.caseStatus.extendApproval;
 
     if ($scope.caseStatus.exceptionRequest === 'YES') {
       receivedDate = $scope.caseStatus.ssDate.getTime();
@@ -160,28 +171,28 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
     }
 
     if(caseType === 'CD') {
-      if (expedited === 'Expedited') {
+      if (priority === 'Expedited') {
         $scope.caseStatus.SLA = expeditedCDSLA;
-      } else if (expedited === 'Standard') {
+      } else if (priority === 'Standard') {
         $scope.caseStatus.SLA = standardCDSLA;
       }
       if($scope.caseStatus.SLA !== null) {
-        if(extendedApproval === 'YES') {
-          $scope.caseStatus.SLA = $scope.caseStatus.SLA + hours24;
+        if(extendApproval === 'YES') {
+          $scope.caseStatus.SLA += hours24;
         }
         $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
       }
     } else if (caseType === 'RD') {
-      if (expedited === 'Expedited') {
+      if (priority === 'Expedited') {
         $scope.caseStatus.SLA = expeditedRDSLA;
-      } else if (expedited === 'Standard') {
+      } else if (priority === 'Standard') {
         $scope.caseStatus.SLA = standardRDSLA;
       } else {
         $scope.caseStatus.SLA = null;
       }
       if($scope.caseStatus.SLA !== null) {
-        if(extendedApproval === 'YES') {
-          $scope.caseStatus.SLA = $scope.caseStatus.SLA + hours24;
+        if(extendApproval === 'YES') {
+          $scope.caseStatus.SLA += hours24;
         }
         $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
         $scope.caseStatus.dueDate = $scope.caseStatus.dueDate.setHours(23,59,59,999);
@@ -194,6 +205,8 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
     }
 
     $scope.calcTimelyDecision();
+    $scope.calcTimelyEffectuation();
+    $scope.calcTimelyOralNotification();
     $scope.calcTimelyWrittenNotification();
   };
 
