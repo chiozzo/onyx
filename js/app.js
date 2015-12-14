@@ -5,10 +5,15 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 
 	$stateProvider
 		.state('case', {
-			url:'/',
+			url:'/case',
 			templateUrl: 'partial/case.html',
 			controller: 'caseController'
-		});
+		})
+    .state('universe', {
+      url:'/universe',
+      templateUrl: 'partial/universeList.html',
+      controller: 'caseController'
+    });
 }]);
 
 /**
@@ -62,7 +67,7 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
     // fileText is still tab delimited, write function to convert to JSON
     var universe = JSON.parse(fileText);
 
-    universe.filter(function(request, index, array) {
+    universe.map(function(request, index, array) {
       request.receivedDate = $scope.CMSToDate(request["Date the request was received"], request["Time the request was received"]);
       request.decisionDate = $scope.CMSToDate(request["Decision Date"], request["Time of plan decision"]);
       request.effectuationDate = $scope.CMSToDate(request["Date effectuated in the plan's system"], request["Time effectuated in the plans' system"]);
@@ -122,167 +127,167 @@ app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
     extendApproval: 'NO'
   };
 
-  $scope.calcTimelyDecision = function() {
+  $scope.calcTimelyDecision = function(request) {
     var receivedDate = null;
-    var decisionDate = $scope.caseStatus.decisionDate;
-    var SLA = $scope.caseStatus.SLA;
+    var decisionDate = request.decisionDate;
+    var SLA = request.SLA;
 
     // Determine the actual received date based on exception status
-    if ($scope.caseStatus.exceptionRequest === 'YES') {
-      receivedDate = $scope.caseStatus.ssDate;
+    if (request.exceptionRequest === 'YES') {
+      receivedDate = request.ssDate;
     } else {
-      receivedDate = $scope.caseStatus.receivedDate;
+      receivedDate = request.receivedDate;
     }
 
     // When decision and received dates are not null, flag decision timely or not
     if(decisionDate !== null && receivedDate !== null) {
       var timeliness = decisionDate - receivedDate;
       if(timeliness >= 0 && timeliness <= SLA) {
-        $scope.caseStatus.timelyDecision = true;
-        console.log("timeliness", timeliness, $scope.caseStatus.timelyDecision);
+        request.timelyDecision = true;
+        console.log("timeliness", timeliness, request.timelyDecision);
       } else {
-        $scope.caseStatus.timelyDecision = false;
-        console.log("timeliness", timeliness, $scope.caseStatus.timelyDecision);
+        request.timelyDecision = false;
+        console.log("timeliness", timeliness, request.timelyDecision);
       }
     }
   };
 
-  $scope.calcTimelyEffectuation = function(){
+  $scope.calcTimelyEffectuation = function(request){
     var receivedDate = null;
-    var effectuationDate = $scope.caseStatus.effectuationDate;
-    var SLA = $scope.caseStatus.SLA;
+    var effectuationDate = request.effectuationDate;
+    var SLA = request.SLA;
 
     // Determine the actual received date based on exception status
-    if ($scope.caseStatus.exceptionRequest === 'YES') {
-      receivedDate = $scope.caseStatus.ssDate;
+    if (request.exceptionRequest === 'YES') {
+      receivedDate = request.ssDate;
     } else {
-      receivedDate = $scope.caseStatus.receivedDate;
+      receivedDate = request.receivedDate;
     }
 
     // When effectuation and received dates are not null, flag effectuation timely or not
     if(effectuationDate !== null && receivedDate !== null) {
       var timeliness = effectuationDate - receivedDate;
       if(timeliness >= 0 && timeliness <= SLA){
-        $scope.caseStatus.timelyEffectuation = true;
-        console.log("timeliness", timeliness, $scope.caseStatus.timelyEffectuation);
+        request.timelyEffectuation = true;
+        console.log("timeliness", timeliness, request.timelyEffectuation);
       } else {
-        $scope.caseStatus.timelyEffectuation = false;
-        console.log("timeliness", timeliness, $scope.caseStatus.timelyEffectuation);
+        request.timelyEffectuation = false;
+        console.log("timeliness", timeliness, request.timelyEffectuation);
       }
     }
   };
 
-  $scope.calcTimelyOralNotification = function() {
+  $scope.calcTimelyOralNotification = function(request) {
     var receivedDate = null;
-    var oralNotificationDate = $scope.caseStatus.oralNotificationDate;
-    var SLA = $scope.caseStatus.SLA;
+    var oralNotificationDate = request.oralNotificationDate;
+    var SLA = request.SLA;
 
     // Determine the actual received date based on exception status
-    if ($scope.caseStatus.exceptionRequest === 'YES') {
-      receivedDate = $scope.caseStatus.ssDate;
+    if (request.exceptionRequest === 'YES') {
+      receivedDate = request.ssDate;
     } else {
-      receivedDate = $scope.caseStatus.receivedDate;
+      receivedDate = request.receivedDate;
     }
 
     // When effectuation and received dates are not null, flag effectuation timely or not
     if(oralNotificationDate !== null && receivedDate !== null) {
       var timeliness = oralNotificationDate - receivedDate;
       if(timeliness >= 0 && timeliness <= SLA) {
-        $scope.caseStatus.timelyOralNotification = true;
+        request.timelyOralNotification = true;
       } else {
-        $scope.caseStatus.timelyOralNotification = false;
+        request.timelyOralNotification = false;
       }
     }
-    if($scope.caseStatus.writtenNotificationDate !== null) {
-      $scope.calcTimelyWrittenNotification();
+    if(request.writtenNotificationDate !== null) {
+      $scope.calcTimelyWrittenNotification(request);
     }
   };
 
-  $scope.calcTimelyWrittenNotification = function() {
+  $scope.calcTimelyWrittenNotification = function(request) {
     var receivedDate = null;
-    var writtenNotificationDate = $scope.caseStatus.writtenNotificationDate;
-    var SLA = $scope.caseStatus.SLA;
+    var writtenNotificationDate = request.writtenNotificationDate;
+    var SLA = request.SLA;
 
-    if ($scope.caseStatus.exceptionRequest === 'YES') {
-      receivedDate = $scope.caseStatus.ssDate;
+    if (request.exceptionRequest === 'YES') {
+      receivedDate = request.ssDate;
     } else {
-      receivedDate = $scope.caseStatus.receivedDate;
+      receivedDate = request.receivedDate;
     }
 
-    if($scope.caseStatus.timelyOralNotification === true && ($scope.caseStatus.caseType === 'CD' || $scope.caseStatus.caseType === 'RD') && $scope.caseStatus.casePriority === 'Expedited') {
+    if(request.timelyOralNotification === true && (request.caseType === 'CD' || request.caseType === 'RD') && request.casePriority === 'Expedited') {
       SLA += hours24;
     }
 
     if(writtenNotificationDate !== null && receivedDate !== null) {
       var timeliness = writtenNotificationDate - receivedDate;
       if(timeliness >= 0 && timeliness <= SLA) {
-        $scope.caseStatus.timelyWrittenNotification = true;
+        request.timelyWrittenNotification = true;
       } else {
-        $scope.caseStatus.timelyWrittenNotification = false;
+        request.timelyWrittenNotification = false;
       }
     }
   };
 
-  $scope.setDueDate = function(receivedDate) {
-    var caseType = $scope.caseStatus.caseType;
-    var priority = $scope.caseStatus.casePriority;
-    var extendApproval = $scope.caseStatus.extendApproval;
+  $scope.setDueDate = function(receivedDate, request) {
+    var caseType = request.caseType;
+    var priority = request.casePriority;
+    var extendApproval = request.extendApproval;
 
     if(caseType === 'CD') {
       if (priority === 'Expedited') {
-        $scope.caseStatus.SLA = expeditedCDSLA;
+        request.SLA = expeditedCDSLA;
       } else if (priority === 'Standard') {
-        $scope.caseStatus.SLA = standardCDSLA;
+        request.SLA = standardCDSLA;
       }
-      if($scope.caseStatus.SLA !== null) {
+      if(request.SLA !== null) {
         if(extendApproval === 'YES') {
-          $scope.caseStatus.SLA += hours24;
+          request.SLA += hours24;
         }
-        $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
+        request.dueDate = new Date(receivedDate + request.SLA);
       }
     } else if (caseType === 'RD') {
       if (priority === 'Expedited') {
-        $scope.caseStatus.SLA = expeditedRDSLA;
+        request.SLA = expeditedRDSLA;
       } else if (priority === 'Standard') {
-        $scope.caseStatus.SLA = standardRDSLA;
+        request.SLA = standardRDSLA;
       } else {
-        $scope.caseStatus.SLA = null;
+        request.SLA = null;
       }
-      if($scope.caseStatus.SLA !== null) {
+      if(request.SLA !== null) {
         if(extendApproval === 'YES') {
-          $scope.caseStatus.SLA += hours24;
+          request.SLA += hours24;
         }
-        $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
-        $scope.caseStatus.dueDate = $scope.caseStatus.dueDate.setHours(23,59,59,999);
+        request.dueDate = new Date(receivedDate + request.SLA);
+        request.dueDate = request.dueDate.setHours(23,59,59,999);
       }
     } else if (caseType === 'DMR') {
-      $scope.caseStatus.casePriority = null;
-      $scope.caseStatus.SLA = days14;
-      $scope.caseStatus.dueDate = new Date(receivedDate + $scope.caseStatus.SLA);
-      $scope.caseStatus.dueDate = $scope.caseStatus.dueDate.setHours(23,59,59,999);
+      request.casePriority = null;
+      request.SLA = days14;
+      request.dueDate = new Date(receivedDate + request.SLA);
+      request.dueDate = request.dueDate.setHours(23,59,59,999);
     }
   };
 
-  $scope.validateDueDate = function() {
+  $scope.validateDueDate = function(request) {
     var receivedDate = null;
 
-    if ($scope.caseStatus.exceptionRequest === 'YES') {
-      if($scope.caseStatus.ssDate !== null) {
-        receivedDate = $scope.caseStatus.ssDate.getTime();
-        $scope.setDueDate(receivedDate);
+    if (request.exceptionRequest === 'YES') {
+      if(request.ssDate !== null) {
+        receivedDate = request.ssDate.getTime();
+        $scope.setDueDate(receivedDate, request);
       }
     } else {
-      if($scope.caseStatus.receivedDate !== null) {
-        receivedDate = $scope.caseStatus.receivedDate.getTime();
-        $scope.caseStatus.ssDate = null;
-        $scope.setDueDate(receivedDate);
+      if(request.receivedDate !== null) {
+        receivedDate = request.receivedDate.getTime();
+        request.ssDate = null;
+        $scope.setDueDate(receivedDate, request);
       }
     }
 
-    $scope.calcTimelyDecision();
-    $scope.calcTimelyEffectuation();
-    $scope.calcTimelyOralNotification();
-    $scope.calcTimelyWrittenNotification();
+    $scope.calcTimelyDecision(request);
+    $scope.calcTimelyEffectuation(request);
+    $scope.calcTimelyOralNotification(request);
+    $scope.calcTimelyWrittenNotification(request);
   };
 
 /**

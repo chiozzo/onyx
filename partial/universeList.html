@@ -1,0 +1,10 @@
+<div class="controller">
+	<div class="row">
+		<input class="col-md-6" type="file" on-read-file="parseInputFile($fileContents)">
+	</div>
+	<div class="row well" ng-repeat="request in fileUpload">
+		<div class="col-md-4">
+			{{request['Beneficiary First Name']}}
+		</div>
+	</div>
+</div>
