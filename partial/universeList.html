@@ -1,0 +1,34 @@
+<div class="controller">
+	<div class="row">
+		<label>SCDER Universe Upload</label>
+		<input class="col-md-6" type="file" on-read-file="parseInputFile($fileContents)">
+	</div>
+	<div class="row well" ng-repeat="request in fileUpload">
+		<div class="col-md-2">
+			<label>First Name</label>
+			{{request['Beneficiary First Name']}}
+		</div>
+		<div class="col-md-1">
+			<a ng-href="#/universe/{{$index}}">
+				<label>$index</label>
+				{{$index}}
+			</a>
+		</div>
+		<div class="col-md-2">
+			<label> Timely Decision</label>
+			{{request.timelyDecision}}
+		</div>
+		<div class="col-md-2">
+			<label>Timely Effectuation</label>
+			{{request.timelyEffectuation}}
+		</div>
+		<div class="col-md-2">
+			<label>Timely Oral Notice</label>
+			{{request.timelyOralNotification}}
+		</div>
+		<div class="col-md-3">
+			<label>Timely Written Notice</label>
+			{{request.timelyWrittenNotification}}
+		</div>
+	</div>
+</div>
