@@ -1,8 +1,10 @@
 <div class="container">
 
 <div class="row">
-	<input type="file" id= "file" ng-model="fileUpload">
-	<button ng-click="uploadFile()">Import Universe</button>
+	<div>
+    <label>Select File</label>
+    <input type="file" on-read-file="parseInputFile($fileContents)">
+</div>
 </div>
 
 	<div class="row well">

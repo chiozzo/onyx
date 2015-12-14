@@ -11,35 +11,72 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 		});
 }]);
 
-app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
+/**
+ * This directive is a copy pasta job and I'm not entirely sure how it works yet.
+ * http://stackoverflow.com/questions/25652959/angular-file-upload-without-local-server
+ */
+app.directive('onReadFile', ['$parse',
+  function($parse){
+    return {
+      restrict: 'A',
+      scope: false,
+      link: function(scope, ele, attrs) {
 
+        var fn = $parse(attrs.onReadFile);
+        ele.on('change', function(onChangeEvent){
+          var reader = new FileReader();
+
+          reader.onload = function(onLoadEvent) {
+            scope.$apply(function(){
+              fn(scope, {$fileContents: onLoadEvent.target.result} );
+            });
+          };
+
+          reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+        });
+
+      }
+    };
+  }
+]);
+
+app.controller('caseController', ['$scope', '$log', function ($scope, $log) {
   $scope.fileUpload = null;
 
-  $scope.uploadFile = function  () {
-
-
+  $scope.CMSToDate = function(dateInput, timeInput) {
+    dateInput = dateInput.toString().split("");
+    timeInput = timeInput.toString().split("");
+    var year = dateInput.splice(0,4).join('');
+    var month = dateInput.splice(0,2).join('');
+    var day = dateInput.splice(0,2).join('');
+    var hour = timeInput.splice(0,2).join('');
+    var minute = timeInput.splice(0,2).join('');
+    var second = timeInput.splice(0,2).join('');
+    return new Date(year, month - 1, day, hour, minute, second);
+  };
 
 /**
- * This function is a copy pasta job and I'm not entirely sure how it works yet.
+ * This function is a copy pasta job and uses the directive 'onReadFile'.
  */
-    var f = document.getElementById('file').files,
-        r = new FileReader();
-    console.log("f", f);
-    console.log("r", r);
-    r.onloadend = function(e){
-      var data = e.target.result;
-      $scope.fileUpload = e.target.result;
-      //send you binary data via $http or $resource or do anything else with it
-      console.log("data", data);
-    };
-    r.readAsBinaryString(f);
-    // console.log("r.readAsBinaryString(f)", r.readAsBinaryString(f));
+  $scope.parseInputFile = function(fileText){
+    // fileText is still tab delimited, write function to convert to JSON
+    var universe = JSON.parse(fileText);
 
-
-
-
-    console.log('uploadFile run');
-    console.log("$scope.fileUpload", $scope.fileUpload);
+    universe.filter(function(request, index, array) {
+      request.receivedDate = $scope.CMSToDate(request["Date the request was received"], request["Time the request was received"]);
+      request.decisionDate = $scope.CMSToDate(request["Decision Date"], request["Time of plan decision"]);
+      request.effectuationDate = $scope.CMSToDate(request["Date effectuated in the plan's system"], request["Time effectuated in the plans' system"]);
+      request.oralNotificationDate = $scope.CMSToDate(request["Date oral notification provided to enrollee"], request["Time oral notification provided to enrollee"]);
+      request.writtenNotificationDate = $scope.CMSToDate(request["Date written notification provided to enrollee"], request["Time written notification provided to enrollee"]);
+      request.caseType = 'CD';
+      request.casePriority = 'Expedited';
+      request.decision = request["Was the case approved or denied?"];
+      // "Disposition of the request" is also a field that may need to be evaluated
+      return request;
+    });
+    console.log("universe", universe);
+    //move JSON file to factory
+    $scope.fileUpload = universe;
   };
 
   var hours24 = 86400000;
