@@ -38,7 +38,7 @@ app.factory('caseVault', [function() {
         SLA = standardCDSLA;
       }
       if(SLA !== null) {
-        if(extendApproval === true) {
+        if(extendApproval && request.decision === 'Approved') {
           SLA += hours24;
         }
         request.dueDate = new Date(receivedDate + SLA);

@@ -67,57 +67,62 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
 /**
  * parseInputFile is a copy pasta function and uses the directive 'onReadFile'.
  */
-  self.parseInputFile = function(fileText, universeType, priority, exception, extendApproval){
+  self.parseInputFile = function(fileText, caseType, priority, exception, extendApproval){
     // fileText = fileText.replace(/( )/g, '_');
     // Need functionality to convert tab delimited to JSON. fileText is loading JSON file in meantime.
 
     /**
      * BUG: JSON.parse does not recognize CMS formatted times prior to 10:00:00 because the number begins with 0. Must be string.
      */
+    var universeType = self.universeTypes[self.makeUniverseType(caseType, priority, exception)];
     var universe = JSON.parse(fileText);
+    universe.map(function(request, index, array) {
+      request.exceptionRequest = exception;
+      request.extendApproval = extendApproval;
+      request.receivedDate = self.CMSToDate(request[universeType.receivedDate], request[universeType.receivedTime]);
+      if (request[universeType.ssDate] !== null) {
+        request.ssDate = self.CMSToDate(request[universeType.ssDate], request[universeType.ssTime]);
+      }
+      request.decisionDate = self.CMSToDate(request[universeType.decisionDate], request[universeType.decisionTime]);
+      request.effectuationDate = self.CMSToDate(request[universeType.effectuationDate], request[universeType.effectuationTime]);
+      request.oralNotificationDate = self.CMSToDate(request[universeType.oralNotificationDate], request[universeType.oralNotificationTime]);
+      request.writtenNotificationDate = self.CMSToDate(request[universeType.writtenNotificationDate], request[universeType.writtenNotificationTime]);
+      request.caseType = caseType;
+      request.priority = priority;
+      request.decision = request["Was the case approved or denied?"];
+      // "Disposition of the request" is also a field that may need to be evaluated
+      request = caseVault.setDueDate(request);
+      return request;
+    });
+    caseVault.setUniverse(universe);
+  };
 
-    // implement switch here
-    if (universeType === 'CD') {
+  self.makeUniverseType = function(caseType, priority, exception) {
+    console.log('makeUniverseType run');
+    console.log("caseType", caseType);
+    console.log("priority", priority);
+    console.log("exception", exception);
+    if (caseType === 'CD') {
       if (!exception) {
         console.log('not an exception universe');
         if (priority === false) {
           self.universeType = 'SCD';
+          console.log("self.universeType", self.universeType);
         } else if(priority === true) {
           self.universeType = 'ECD';
+          console.log("self.universeType", self.universeType);
         }
       } else if (exception) {
         if (priority === false) {
           self.universeType = 'SCDER';
+          console.log("self.universeType", self.universeType);
         } else if(priority === true) {
           self.universeType = 'ECDER';
+          console.log("self.universeType", self.universeType);
         }
       }
-      universe.map(function(request, index, array) {
-        // console.log("array", array);
-        // console.log("request", request);
-        // console.log("self.universeType", self.universeType);
-        request.receivedDate = self.CMSToDate(request[self.universeTypes[self.universeType].receivedDate], request[self.universeTypes[self.universeType].receivedTime]);
-        if (request[self.universeTypes[self.universeType].ssDate] !== null) {
-        // console.log("request[self.universeTypes[self.universeType].ssDate]", request[self.universeTypes[self.universeType].ssDate]);
-          request.ssDate = self.CMSToDate(request[self.universeTypes[self.universeType].ssDate], request[self.universeTypes[self.universeType].ssTime]);
-        }
-        // console.log("request.ssDate", request.ssDate);
-        request.decisionDate = self.CMSToDate(request[self.universeTypes[self.universeType].decisionDate], request[self.universeTypes[self.universeType].decisionTime]);
-        request.effectuationDate = self.CMSToDate(request[self.universeTypes[self.universeType].effectuationDate], request[self.universeTypes[self.universeType].effectuationTime]);
-        request.oralNotificationDate = self.CMSToDate(request[self.universeTypes[self.universeType].oralNotificationDate], request[self.universeTypes[self.universeType].oralNotificationTime]);
-        request.writtenNotificationDate = self.CMSToDate(request[self.universeTypes[self.universeType].writtenNotificationDate], request[self.universeTypes[self.universeType].writtenNotificationTime]);
-        request.caseType = universeType;
-        request.priority = priority;
-        request.decision = request["Was the case approved or denied?"];
-        // "Disposition of the request" is also a field that may need to be evaluated
-        request.exceptionRequest = exception;
-        request = caseVault.setDueDate(request);
-        // console.log("request.dueDate", request.dueDate);
-        request.extendApproval = extendApproval;
-        return request;
-      });
     }
-    caseVault.setUniverse(universe);
+    return self.universeType;
   };
 
   self.CMSToDate = function(dateInput, timeInput) {
