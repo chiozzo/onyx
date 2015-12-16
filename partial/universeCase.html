@@ -1,7 +1,31 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
-			{{$index}}
+			<a href="#/universe">
+				<button>Back to Universe</button>
+			</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<label>First Name</label>
+			{{caseDetailCtrl.selectedRequest['Beneficiary First Name']}}
+		</div>
+		<div class="col-md-2">
+			<label> Timely Decision</label>
+			{{caseDetailCtrl.selectedRequest.timelyDecision}}
+		</div>
+		<div class="col-md-2">
+			<label>Timely Effectuation</label>
+			{{caseDetailCtrl.selectedRequest.timelyEffectuation}}
+		</div>
+		<div class="col-md-2">
+			<label>Timely Oral Notice</label>
+			{{caseDetailCtrl.selectedRequest.timelyOralNotification}}
+		</div>
+		<div class="col-md-3">
+			<label>Timely Written Notice</label>
+			{{caseDetailCtrl.selectedRequest.timelyWrittenNotification}}
 		</div>
 	</div>
 </div>
