@@ -69,13 +69,14 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
  */
   self.parseInputFile = function(fileText, caseType, priority, exception, extendApproval){
     // fileText = fileText.replace(/( )/g, '_');
-    // Need functionality to convert tab delimited to JSON. fileText is loading JSON file in meantime.
+    var universeType = self.universeTypes[self.makeUniverseType(caseType, priority, exception)];
 
+    // Need functionality to convert tab delimited to JSON. fileText is loading JSON file in meantime.
     /**
      * BUG: JSON.parse does not recognize CMS formatted times prior to 10:00:00 because the number begins with 0. Must be string.
      */
-    var universeType = self.universeTypes[self.makeUniverseType(caseType, priority, exception)];
     var universe = JSON.parse(fileText);
+    // console.log("JSON.parse", universe);
     universe.map(function(request, index, array) {
       request.exceptionRequest = exception;
       request.extendApproval = extendApproval;
@@ -98,30 +99,37 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
   };
 
   self.makeUniverseType = function(caseType, priority, exception) {
-    console.log('makeUniverseType run');
-    console.log("caseType", caseType);
-    console.log("priority", priority);
-    console.log("exception", exception);
     if (caseType === 'CD') {
-      if (!exception) {
-        console.log('not an exception universe');
-        if (priority === false) {
-          self.universeType = 'SCD';
-          console.log("self.universeType", self.universeType);
-        } else if(priority === true) {
-          self.universeType = 'ECD';
-          console.log("self.universeType", self.universeType);
-        }
-      } else if (exception) {
-        if (priority === false) {
-          self.universeType = 'SCDER';
-          console.log("self.universeType", self.universeType);
-        } else if(priority === true) {
-          self.universeType = 'ECDER';
-          console.log("self.universeType", self.universeType);
+      if (false) {
+        // set DMR universeType
+      } else {
+        if (!exception) {
+          if (priority === false) {
+            self.universeType = 'SCD';
+          } else if (priority === true) {
+            self.universeType = 'ECD';
+          }
+        } else if (exception) {
+          if (priority === false) {
+            self.universeType = 'SCDER';
+          } else if(priority === true) {
+            self.universeType = 'ECDER';
+          }
         }
       }
-    }
+    } else if (caseType === 'RD') {
+      if (false) {
+        // set DMR universeType
+      } else {
+        if (priority === false) {
+          self.universeType = 'SRD';
+        } else if (priority === true) {
+          self.universeType = 'ERD';
+        }
+      }
+    }/* else if (caseType === 'DMR') {
+      // Hey DUMMY! DMR is a property of CD or RD that ignores priority. "Is this request for post service reimbursement?"
+    }*/
     return self.universeType;
   };
 

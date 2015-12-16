@@ -1,6 +1,6 @@
 <div class="container" ng-controller="importUniverse as import">
 	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
+		<div class="col-md-12" style="text-align: center;">
 			<h4>What kind of universe will you be uploading?</h4>
 		</div>
 		<div class="col-md-3">
@@ -16,19 +16,18 @@
 			<input name="universeExpedited" type="checkbox" ng-model="import.universeExpedited" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException)">
 		</div>
 		<div class="col-md-3">
-			<label for="universeExtendedApproval">extendedApproval</label>
-			<input name="universeExtendedApproval" type="checkbox" ng-model="import.universeExtendedApproval">
-		</div>
-		<div class="col-md-3">
 			<label for="universeException">Exception</label>
 			<input name="universeException" type="checkbox" ng-model="import.universeException" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException)">
 		</div>
-		<div class="col-md-6 col-md-offset-3">
-			<label for="fileUpload">Universe Upload</label>
-			<p><b>SCDER, ECDER, SCD, ECD</b></p>
-			<p><s>SRD, ERD, DMR, DMRRD</s></p>
-			<input name="fileUpload" type="file" on-read-file="import.parseInputFile($fileContents, import.caseType, import.universeExpedited, import.universeException, import.universeExtendedApproval)">
-			<!-- <input name="fileUpload" type="file" on-read-file="import.parseInputFile($fileContents, 'CD', import.universeExpedited, import.universeException, import.universeExtendedApproval)"> -->
+		<div class="col-md-3">
+			<label for="universeExtendedApproval">Approved within 24 hours after SLA?</label>
+			<input name="universeExtendedApproval" type="checkbox" ng-model="import.universeExtendedApproval">
+		</div>
+		<div class="col-md-12">
+			<label class="col-md-3" style="text-align: center;" for="fileUpload">Universe Upload</label>
+			<p class="col-md-3" style="text-align: center;"><b>SCDER, ECDER, SCD, ECD</b></p>
+			<p class="col-md-3" style="text-align: center;"><s>SRD, ERD, DMR, DMRRD</s></p>
+			<input class="col-md-3" style="text-align: center;" name="fileUpload" type="file" on-read-file="import.parseInputFile($fileContents, import.caseType, import.universeExpedited, import.universeException, import.universeExtendedApproval)">
 		</div>
 		<div class="col-md-6 col-md-offset-3" ng-show="import.universeType">
 			<h3>It looks like you're uploading an <b>{{import.universeType}}</b> universe. Go ahead; you're good to go!</h3>
