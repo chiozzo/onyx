@@ -39,7 +39,7 @@ app.directive('onReadFile', ['$parse', '$state', function($parse, $state){
             scope.$apply(function(){
               fn(scope, {$fileContents: onLoadEvent.target.result} );
             });
-            $state.go('universeList');
+            // $state.go('universeList');
           };
 
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
@@ -77,40 +77,42 @@ app.factory('caseVault', [function() {
   var setSLA = function(receivedDate, request) {
     // console.log("receivedDate", receivedDate);
     var caseType = request.caseType;
-    var priority = request.casePriority;
+    var priority = request.priority;
     var extendApproval = request.extendApproval;
     var SLA = null;
     receivedDate = receivedDate.getTime();
 
+    // Implement switch here
+
     if(caseType === 'CD') {
-      if (priority === 'Expedited') {
+      if (priority === true) {
         SLA = expeditedCDSLA;
-      } else if (priority === 'Standard') {
+      } else if (priority === false) {
         SLA = standardCDSLA;
       }
       if(SLA !== null) {
-        if(extendApproval === 'YES') {
+        if(extendApproval === true) {
           SLA += hours24;
         }
         request.dueDate = new Date(receivedDate + SLA);
       }
     } else if (caseType === 'RD') {
-      if (priority === 'Expedited') {
+      if (priority === true) {
         SLA = expeditedRDSLA;
-      } else if (priority === 'Standard') {
+      } else if (priority === false) {
         SLA = standardRDSLA;
       } else {
         SLA = null;
       }
       if(SLA !== null) {
-        if(extendApproval === 'YES') {
+        if(extendApproval === true) {
           SLA += hours24;
         }
         request.dueDate = new Date(receivedDate + SLA);
         request.dueDate = request.dueDate.setHours(23,59,59,999);
       }
     } else if (caseType === 'DMR') {
-      request.casePriority = null;
+      request.priority = null;
       SLA = days14;
       request.dueDate = new Date(receivedDate + SLA);
       request.dueDate = request.dueDate.setHours(23,59,59,999);
@@ -135,7 +137,7 @@ app.factory('caseVault', [function() {
       var dueDate = request.dueDate;
 
       // Determine the actual received date based on exception status
-      if (request.exceptionRequest === 'YES') {
+      if (request.exceptionRequest === true) {
         receivedDate = request.ssDate;
       } else {
         receivedDate = request.receivedDate;
@@ -160,7 +162,7 @@ app.factory('caseVault', [function() {
       var dueDate = request.dueDate;
 
       // Determine the actual received date based on exception status
-      if (request.exceptionRequest === 'YES') {
+      if (request.exceptionRequest === true) {
         receivedDate = request.ssDate;
       } else {
         receivedDate = request.receivedDate;
@@ -185,7 +187,7 @@ app.factory('caseVault', [function() {
       var dueDate = request.dueDate;
 
       // Determine the actual received date based on exception status
-      if (request.exceptionRequest === 'YES') {
+      if (request.exceptionRequest === true) {
         receivedDate = request.ssDate;
       } else {
         receivedDate = request.receivedDate;
@@ -212,7 +214,7 @@ app.factory('caseVault', [function() {
       var writtenNotificationDate = request.writtenNotificationDate;
       var dueDate = request.dueDate;
 
-      if (request.exceptionRequest === 'YES') {
+      if (request.exceptionRequest === true) {
         receivedDate = request.ssDate;
       } else {
         receivedDate = request.receivedDate;
@@ -220,7 +222,7 @@ app.factory('caseVault', [function() {
 
       var SLA = dueDate - receivedDate;
 
-      if(request.timelyOralNotification === true && (request.caseType === 'CD' || request.caseType === 'RD') && request.casePriority === 'Expedited') {
+      if(request.timelyOralNotification === true && (request.caseType === 'CD' || request.caseType === 'RD') && request.priority === true) {
         SLA += hours24;
       }
 
@@ -237,7 +239,7 @@ app.factory('caseVault', [function() {
     setDueDate: function(request) {
       var receivedDate = null;
 
-      if (request.exceptionRequest === 'YES') {
+      if (request.exceptionRequest === true) {
         if(request.ssDate !== null) {
           receivedDate = request.ssDate;
           request = setSLA(receivedDate, request);
@@ -301,6 +303,21 @@ app.controller('universeDetailController', ['$stateParams', 'caseVault', functio
 app.controller('importUniverse', ['caseVault', function(caseVault) {
   var self = this;
 
+  self.universeType = null;
+
+
+  self.universeTypes = {
+    SCDER: {
+      receivedDate: "Date the request was received",
+      receivedTime: "Time the request was received"
+    },
+    ECDER: {
+      receivedDate: "Date the request was received",
+      receivedTime: "Time the request was received"
+    }
+  };
+
+
   self.CMSToDate = function(dateInput, timeInput) {
     dateInput = dateInput.toString().split("");
     timeInput = timeInput.toString().split("");
@@ -316,8 +333,8 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
 /**
  * parseInputFile is a copy pasta function and uses the directive 'onReadFile'.
  */
-  self.parseInputFile = function(fileText, caseType, casePriority, exceptionRequest, extendApproval){
-    if (!caseVault.getUniverse()) {
+  self.parseInputFile = function(fileText, universeType, priority, exceptionRequest, extendApproval){
+    // if (!caseVault.getUniverse()) {
     // fileText = fileText.replace(/( )/g, '_');
     // Need functionality to convert tab delimited to JSON. fileText is loading JSON file in meantime.
 
@@ -325,15 +342,21 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
      * BUG: JSON.parse does not recognize CMS formatted times prior to 10:00:00 because the number begins with 0. Must be string.
      */
     var universe = JSON.parse(fileText);
-    if (caseType === 'CD' && casePriority === 'Standard' && exceptionRequest === 'NO') {
+    if (universeType === 'CD' && exceptionRequest === false) {
+      if (priority === false) {
+        self.universeType = 'SCDER';
+      } else if(priority === true) {
+        self.universeType = 'ECDER';
+      }
       universe.map(function(request, index, array) {
-        request.receivedDate = self.CMSToDate(request["Date the request was received"], request["Time the request was received"]);
+        console.log("self.universeTypes[self.universeType]", self.universeTypes[self.universeType]);
+        request.receivedDate = self.CMSToDate(request[self.universeTypes[self.universeType].receivedDate], request[self.universeTypes[self.universeType].receivedTime]);
         request.decisionDate = self.CMSToDate(request["Date of plan decision"], request["Time of plan decision"]);
         request.effectuationDate = self.CMSToDate(request["Date effectuated in the plan's system"], request["Time effectuated in the plans' system"]);
         request.oralNotificationDate = self.CMSToDate(request["Date oral notification provided to enrollee"], request["Time oral notification provided to enrollee"]);
         request.writtenNotificationDate = self.CMSToDate(request["Date written notification provided to enrollee"], request["Time written notification provided to enrollee"]);
-        request.caseType = caseType;
-        request.casePriority = casePriority;
+        request.caseType = universeType;
+        request.priority = priority;
         request.decision = request["Was the case approved or denied?"];
         // "Disposition of the request" is also a field that may need to be evaluated
         // request.ssDate = null;
@@ -344,7 +367,7 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
       });
     }
     caseVault.setUniverse(universe);
-    }
+    // }
   };
 
 }]);
@@ -386,7 +409,7 @@ app.controller('caseController', ['caseVault', function (caseVault) {
     timelyWrittenNotification: null,
     timelyOralNotification: null,
     caseType: 'CD',
-    casePriority: null,
+    priority: null,
     decision: 'Pending',
     dueDate: null,
     SLA: null,
