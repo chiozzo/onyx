@@ -23,7 +23,6 @@ app.factory('caseVault', [function() {
   };
 
   var setSLA = function(receivedDate, request) {
-    // console.log("receivedDate", receivedDate);
     var caseType = request.caseType;
     var priority = request.priority;
     var extendApproval = request.extendApproval;
@@ -187,15 +186,14 @@ app.factory('caseVault', [function() {
     setDueDate: function(request) {
       var receivedDate = null;
 
-      if (request.exceptionRequest === true) {
+      if (request.exceptionRequest) {
         if(request.ssDate !== null) {
           receivedDate = request.ssDate;
           request = setSLA(receivedDate, request);
         }
-      } else {
+      } else if (!request.exceptionRequest) {
         if(request.receivedDate !== null) {
           receivedDate = request.receivedDate;
-          request.ssDate = null;
           request = setSLA(receivedDate, request);
         }
       }
