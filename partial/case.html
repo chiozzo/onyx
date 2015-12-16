@@ -1,5 +1,10 @@
 <div class="container">
 
+	<div class="row" ng-controller="importUniverse as import">
+		<label>SCDER Universe Upload</label>
+		<input class="col-md-6" type="file" on-read-file="import.parseInputFile($fileContents)">
+	</div>
+
 	<div class="row well">
 		<div class="btn-group col-md-3" ng-hide="caseStatus.caseType === 'DMR'">
 			<h3>Case Priority</h3>

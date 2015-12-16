@@ -12,12 +12,12 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
     .state('universeList', {
       url:'/universe',
       templateUrl: 'partial/universeList.html',
-      controller: 'caseController as caseCtrl'
+      controller: 'universeController as universeCtrl'
     })
     .state('universeCase', {
       url:'/universe/:index',
       templateUrl: 'partial/universeCase.html',
-      controller: 'caseDetailController as caseDetailCtrl'
+      controller: 'universeDetailController as universeDetailCtrl'
     });
 }]);
 
@@ -25,8 +25,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
  * This directive is a copy pasta job and I'm not entirely sure how it works yet.
  * http://stackoverflow.com/questions/25652959/angular-file-upload-without-local-server
  */
-app.directive('onReadFile', ['$parse',
-  function($parse){
+app.directive('onReadFile', ['$parse', '$state', function($parse, $state){
     return {
       restrict: 'A',
       scope: false,
@@ -40,6 +39,7 @@ app.directive('onReadFile', ['$parse',
             scope.$apply(function(){
               fn(scope, {$fileContents: onLoadEvent.target.result} );
             });
+            $state.go('universeList');
           };
 
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
@@ -256,7 +256,40 @@ app.factory('caseVault', [function() {
   return factory;
 }]);
 
-app.controller('caseDetailController', ['$stateParams', 'caseVault', function($stateParams, caseVault) {
+app.controller('universeController', ['caseVault', function(caseVault) {
+  var self = this;
+  self.universe = caseVault.getUniverse();
+
+  self.untimelyDecisions = self.universe.filter(function(request, index, array) {
+    if(!request.timelyDecision) {
+      return request;
+    }
+  });
+  console.log("self.untimelyDecisions", self.untimelyDecisions);
+
+  self.untimelyEffectuations = self.universe.filter(function(request, index, array) {
+    if(!request.timelyEffectuation) {
+      return request;
+    }
+  });
+  console.log("self.untimelyEffectuations", self.untimelyEffectuations);
+
+  self.untimelyNotifications = self.universe.filter(function(request, index, array) {
+    if(!request.timelyOralNotification || !request.timelyWrittenNotification) {
+      return request;
+    }
+  });
+  console.log("self.untimelyNotifications", self.untimelyNotifications);
+
+
+
+
+
+
+
+}]);
+
+app.controller('universeDetailController', ['$stateParams', 'caseVault', function($stateParams, caseVault) {
   var self = this;
   console.log("$stateParams.index", $stateParams.index);
   var caseID = $stateParams.index;
@@ -266,7 +299,6 @@ app.controller('caseDetailController', ['$stateParams', 'caseVault', function($s
 }]);
 
 app.controller('importUniverse', ['caseVault', function(caseVault) {
-  console.log('importUniverse run');
   var self = this;
 
   self.CMSToDate = function(dateInput, timeInput) {
@@ -278,15 +310,13 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
     var hour = timeInput.splice(0,2).join('');
     var minute = timeInput.splice(0,2).join('');
     var second = timeInput.splice(0,2).join('');
-    // console.log("Date()", Date(year, month - 1, day, hour, minute, second));
     return new Date(year, month - 1, day, hour, minute, second);
   };
 
 /**
- * function is a copy pasta job and uses the directive 'onReadFile'.
+ * parseInputFile is a copy pasta function and uses the directive 'onReadFile'.
  */
   self.parseInputFile = function(fileText){
-    console.log("fileText", fileText);
     if (!caseVault.getUniverse()) {
     // fileText = fileText.replace(/( )/g, '_');
     // Need functionality to convert tab delimited to JSON. fileText is loading JSON file in meantime.
@@ -314,30 +344,6 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
     caseVault.setUniverse(universe);
     }
   };
-
-/**
-  self.universe = caseVault.getUniverse();
-  var untimelyDecisions = self.universe.filter(function(request, index, array) {
-    if(!request.timelyDecision) {
-      return request;
-    }
-  });
-  console.log("untimelyDecisions", untimelyDecisions);
-
-  var untimelyEffectuations = self.universe.filter(function(request, index, array) {
-    if(!request.timelyEffectuation) {
-      return request;
-    }
-  });
-  console.log("untimelyEffectuations", untimelyEffectuations);
-
-  var untimelyNotifications = self.universe.filter(function(request, index, array) {
-    if(!request.timelyOralNotification || !request.timelyWrittenNotification) {
-      return request;
-    }
-  });
-  console.log("untimelyNotifications", untimelyNotifications);
- */
 
 }]);
 
