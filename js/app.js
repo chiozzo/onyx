@@ -22,7 +22,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 }]);
 
 /**
- * This directive is a copy pasta job and I'm not entirely sure how it works yet.
+ * This directive is a copy pasta job and I'm not entirely sure how it works yet. I added $state.go for my purposes.
  * http://stackoverflow.com/questions/25652959/angular-file-upload-without-local-server
  */
 app.directive('onReadFile', ['$parse', '$state', function($parse, $state){
@@ -316,7 +316,7 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
 /**
  * parseInputFile is a copy pasta function and uses the directive 'onReadFile'.
  */
-  self.parseInputFile = function(fileText){
+  self.parseInputFile = function(fileText, caseType, casePriority, exceptionRequest, extendApproval){
     if (!caseVault.getUniverse()) {
     // fileText = fileText.replace(/( )/g, '_');
     // Need functionality to convert tab delimited to JSON. fileText is loading JSON file in meantime.
@@ -325,22 +325,24 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
      * BUG: JSON.parse does not recognize CMS formatted times prior to 10:00:00 because the number begins with 0. Must be string.
      */
     var universe = JSON.parse(fileText);
-    universe.map(function(request, index, array) {
-      request.receivedDate = self.CMSToDate(request["Date the request was received"], request["Time the request was received"]);
-      request.decisionDate = self.CMSToDate(request["Date of plan decision"], request["Time of plan decision"]);
-      request.effectuationDate = self.CMSToDate(request["Date effectuated in the plan's system"], request["Time effectuated in the plans' system"]);
-      request.oralNotificationDate = self.CMSToDate(request["Date oral notification provided to enrollee"], request["Time oral notification provided to enrollee"]);
-      request.writtenNotificationDate = self.CMSToDate(request["Date written notification provided to enrollee"], request["Time written notification provided to enrollee"]);
-      request.caseType = 'CD';
-      request.casePriority = 'Standard';
-      request.decision = request["Was the case approved or denied?"];
-      // "Disposition of the request" is also a field that may need to be evaluated
-      // request.ssDate = null;
-      request = caseVault.setDueDate(request);
-      request.exceptionRequest = "What's an exception?";
-      request.extendApproval = 'NO';
-      return request;
-    });
+    if (caseType === 'CD' && casePriority === 'Standard' && exceptionRequest === 'NO') {
+      universe.map(function(request, index, array) {
+        request.receivedDate = self.CMSToDate(request["Date the request was received"], request["Time the request was received"]);
+        request.decisionDate = self.CMSToDate(request["Date of plan decision"], request["Time of plan decision"]);
+        request.effectuationDate = self.CMSToDate(request["Date effectuated in the plan's system"], request["Time effectuated in the plans' system"]);
+        request.oralNotificationDate = self.CMSToDate(request["Date oral notification provided to enrollee"], request["Time oral notification provided to enrollee"]);
+        request.writtenNotificationDate = self.CMSToDate(request["Date written notification provided to enrollee"], request["Time written notification provided to enrollee"]);
+        request.caseType = caseType;
+        request.casePriority = casePriority;
+        request.decision = request["Was the case approved or denied?"];
+        // "Disposition of the request" is also a field that may need to be evaluated
+        // request.ssDate = null;
+        request = caseVault.setDueDate(request);
+        request.exceptionRequest = exceptionRequest;
+        request.extendApproval = extendApproval;
+        return request;
+      });
+    }
     caseVault.setUniverse(universe);
     }
   };
