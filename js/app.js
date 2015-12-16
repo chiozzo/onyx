@@ -4,10 +4,20 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 	$urlRouterProvider.otherwise('/');
 
 	$stateProvider
+  /**
+    .state('auditType', {
+      url: '/auditType',
+      //I want multiple templatesUrls and/or controllers
+    })
+   */
+    .state('fileUpload', {
+      url: '/fileUpload',
+      templateUrl: 'partial/fileUpload.html'
+    })
 		.state('singleCase', {
-			url:'/case',
-			templateUrl: 'partial/case.html',
-			controller: 'caseController as caseCtrl'
+			url:'/singleCase',
+			templateUrl: 'partial/singleCase.html',
+			controller: 'singleCaseController as singleCaseCtrl'
 		})
     .state('universeList', {
       url:'/universe',

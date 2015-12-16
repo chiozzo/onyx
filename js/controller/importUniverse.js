@@ -47,7 +47,6 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
         self.universeType = 'ECDER';
       }
       universe.map(function(request, index, array) {
-        console.log("self.universeTypes[self.universeType]", self.universeTypes[self.universeType]);
         request.receivedDate = self.CMSToDate(request[self.universeTypes[self.universeType].receivedDate], request[self.universeTypes[self.universeType].receivedTime]);
         request.decisionDate = self.CMSToDate(request["Date of plan decision"], request["Time of plan decision"]);
         request.effectuationDate = self.CMSToDate(request["Date effectuated in the plan's system"], request["Time effectuated in the plans' system"]);

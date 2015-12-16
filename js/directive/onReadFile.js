@@ -16,7 +16,7 @@ app.directive('onReadFile', ['$parse', '$state', function($parse, $state){
             scope.$apply(function(){
               fn(scope, {$fileContents: onLoadEvent.target.result} );
             });
-            // $state.go('universeList');
+            $state.go('universeList');
           };
 
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);

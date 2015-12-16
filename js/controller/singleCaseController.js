@@ -1,4 +1,4 @@
-app.controller('caseController', ['caseVault', function (caseVault) {
+app.controller('singleCaseController', ['caseVault', function (caseVault) {
   var self = this;
   var hours24 = 86400000;
   var hours72 = 259200000;
