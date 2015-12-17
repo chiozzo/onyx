@@ -7,6 +7,7 @@
 			<label for="caseType">Case Type</label>
 			<select name="caseType" ng-model="import.caseType" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException)">
 				<option value="CD">CD</option>
+				<option value="RD">RD</option>
 			</select>
 		</div>
 		<div class="col-md-3">
@@ -15,7 +16,7 @@
 			<label for="universeExpedited" ng-show="import.universeExpedited === false">Standard</label>
 			<input name="universeExpedited" type="checkbox" ng-model="import.universeExpedited" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException)">
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-3" ng-hide="import.caseType === 'RD'">
 			<label for="universeException">Exception</label>
 			<input name="universeException" type="checkbox" ng-model="import.universeException" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException)">
 		</div>
@@ -25,8 +26,8 @@
 		</div>
 		<div class="col-md-12">
 			<label class="col-md-3" style="text-align: center;" for="fileUpload">Universe Upload</label>
-			<p class="col-md-3" style="text-align: center;"><b>SCDER, ECDER, SCD, ECD</b></p>
-			<p class="col-md-3" style="text-align: center;"><s>SRD, ERD, DMR, DMRRD</s></p>
+			<p class="col-md-3" style="text-align: center;"><b>SRD, ERD, SCDER, ECDER, SCD, ECD</b></p>
+			<p class="col-md-3" style="text-align: center;"><s>DMR, DMRRD</s></p>
 			<input class="col-md-3" style="text-align: center;" name="fileUpload" type="file" on-read-file="import.parseInputFile($fileContents, import.caseType, import.universeExpedited, import.universeException, import.universeExtendedApproval)">
 		</div>
 		<div class="col-md-6 col-md-offset-3" ng-show="import.universeType">

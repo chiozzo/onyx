@@ -60,6 +60,34 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
       writtenNotificationTime: "Time written notification provided to enrollee",
       ssDate: "Date prescriber supporting statement received",
       ssTime: "Time prescriber supporting statement received"
+    },
+    SRD: {
+      receivedDate: "Date the request was received",
+      receivedTime: "Time the request was received",
+      decisionDate: "Date of plan decision",
+      decisionTime: "Time of plan decision",
+      effectuationDate: "Date effectuated in the plan's system",
+      effectuationTime: "Time effectuated in the plans' system",
+      oralNotificationDate: "Date oral notification provided to enrollee",
+      oralNotificationTime: "Time oral notification provided to enrollee",
+      writtenNotificationDate: "Date written notification provided to enrollee",
+      writtenNotificationTime: "Time written notification provided to enrollee",
+      ssDate: "Date prescriber supporting statement received",
+      ssTime: "Time prescriber supporting statement received"
+    },
+    ERD: {
+      receivedDate: "Date the request was received",
+      receivedTime: "Time the request was received",
+      decisionDate: "Date of plan decision",
+      decisionTime: "Time of plan decision",
+      effectuationDate: "Date effectuated in the plan's system",
+      effectuationTime: "Time effectuated in the plans' system",
+      oralNotificationDate: "Date oral notification provided to enrollee",
+      oralNotificationTime: "Time oral notification provided to enrollee",
+      writtenNotificationDate: "Date written notification provided to enrollee",
+      writtenNotificationTime: "Time written notification provided to enrollee",
+      ssDate: "Date prescriber supporting statement received",
+      ssTime: "Time prescriber supporting statement received"
     }
   };
 
@@ -70,6 +98,10 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
   self.parseInputFile = function(fileText, caseType, priority, exception, extendApproval){
     // fileText = fileText.replace(/( )/g, '_');
     var universeType = self.universeTypes[self.makeUniverseType(caseType, priority, exception)];
+
+    if (caseType === 'RD') {
+      exception = false;
+    }
 
     // Need functionality to convert tab delimited to JSON. fileText is loading JSON file in meantime.
     /**
@@ -118,6 +150,7 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
         }
       }
     } else if (caseType === 'RD') {
+      exception = false;
       if (false) {
         // set DMR universeType
       } else {

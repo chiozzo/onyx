@@ -32,10 +32,14 @@ app.factory('caseVault', [function() {
     // Implement switch here
 
     if(caseType === 'CD') {
-      if (priority === true) {
-        SLA = expeditedCDSLA;
-      } else if (priority === false) {
-        SLA = standardCDSLA;
+      if(false) {
+        // set DMR SLA
+      } else {
+        if (priority === true) {
+          SLA = expeditedCDSLA;
+        } else if (priority === false) {
+          SLA = standardCDSLA;
+        }
       }
       if(SLA !== null) {
         if(extendApproval && request.decision === 'Approved') {
@@ -44,26 +48,29 @@ app.factory('caseVault', [function() {
         request.dueDate = new Date(receivedDate + SLA);
       }
     } else if (caseType === 'RD') {
-      if (priority === true) {
-        SLA = expeditedRDSLA;
-      } else if (priority === false) {
-        SLA = standardRDSLA;
+      if(false) {
+        // set DMR SLA
       } else {
-        SLA = null;
+        if (priority === true) {
+          SLA = expeditedRDSLA;
+        } else if (priority === false) {
+          SLA = standardRDSLA;
+        } else {
+          SLA = null;
+        }
       }
       if(SLA !== null) {
-        if(extendApproval === true) {
+        if(extendApproval && request.decision === 'Approved') {
           SLA += hours24;
         }
-        request.dueDate = new Date(receivedDate + SLA);
-        request.dueDate = request.dueDate.setHours(23,59,59,999);
+        request.dueDate = new Date(new Date(receivedDate + SLA).setHours(23,59,59,999));
       }
-    } else if (caseType === 'DMR') {
+    }/* else if (caseType === 'DMR') {
       request.priority = null;
       SLA = days14;
       request.dueDate = new Date(receivedDate + SLA);
       request.dueDate = request.dueDate.setHours(23,59,59,999);
-    }
+    }*/
     return request;
   };
 
@@ -169,7 +176,7 @@ app.factory('caseVault', [function() {
 
       var SLA = dueDate - receivedDate;
 
-      if(request.timelyOralNotification === true && (request.caseType === 'CD' || request.caseType === 'RD') && request.priority === true) {
+      if(request.timelyOralNotification === true && request.priority === true) {
         SLA += hours24;
       }
 
@@ -185,7 +192,6 @@ app.factory('caseVault', [function() {
     },
     setDueDate: function(request) {
       var receivedDate = null;
-
       if (request.exceptionRequest) {
         if(request.ssDate !== null) {
           receivedDate = request.ssDate;
