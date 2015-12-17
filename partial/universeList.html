@@ -1,31 +1,32 @@
 <div class="container">
-	<div ng-include="'partial/fileUpload.html'"></div>
 
 	<div class="row well" ng-repeat="request in universeCtrl.universe">
 		<div class="col-md-2">
-			<label>First Name</label>
+			<h5>First Name</h5>
 			{{request['Beneficiary First Name']}}
+			<h5>Last Name</h5>
+			{{request['Beneficiary Last Name']}}
 		</div>
 		<div class="col-md-1">
 			<a ng-href="#/universe/{{$index}}">
-				<label>$index</label>
+				<h5>$index</h5>
 				{{$index}}
 			</a>
 		</div>
 		<div class="col-md-2">
-			<label> Timely Decision</label>
+			<h5> Timely Decision</h5>
 			{{request.timelyDecision}}
 		</div>
 		<div class="col-md-2">
-			<label>Timely Effectuation</label>
+			<h5>Timely Effectuation</h5>
 			{{request.timelyEffectuation}}
 		</div>
 		<div class="col-md-2">
-			<label>Timely Oral Notice</label>
+			<h5>Timely Oral Notice</h5>
 			{{request.timelyOralNotification}}
 		</div>
 		<div class="col-md-3">
-			<label>Timely Written Notice</label>
+			<h5>Timely Written Notice</h5>
 			{{request.timelyWrittenNotification}}
 		</div>
 	</div>

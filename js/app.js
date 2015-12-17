@@ -1,4 +1,4 @@
-var app = angular.module('onyx', ['ui.router', 'ui.bootstrap']);
+var app = angular.module('onyx', ['ui.router', 'ngMaterial']);
 
 app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/');

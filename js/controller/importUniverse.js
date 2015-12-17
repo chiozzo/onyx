@@ -164,14 +164,11 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
   };
 
   self.makeUniverseType = function(caseType, priority, exception, reimbursement) {
-    console.log('makeUniverseType run');
     if (caseType === 'CD') {
       if (reimbursement) {
         exception = false;
         priority = false;
         self.universeType = 'DMRCD';
-        console.log("reimbursement", reimbursement);
-        console.log('DMRCD');
       } else {
         if (!exception) {
           if (priority === false) {
@@ -192,8 +189,6 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
       if (reimbursement) {
         priority = false;
         self.universeType = 'DMRRD';
-        console.log("reimbursement", reimbursement);
-        console.log('DMRRD');
       } else {
         if (priority === false) {
           self.universeType = 'SRD';
