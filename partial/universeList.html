@@ -1,4 +1,25 @@
-<div class="container">
+<div ng-repeat="request in universeCtrl.universe">
+	<div layout="row" layout-xs="column" layout-align="center center">
+	    <h5>First Name</h5>
+			{{request['Beneficiary First Name']}}
+			<h5>Last Name</h5>
+			{{request['Beneficiary Last Name']}}
+			<a ng-href="#/universe/{{$index}}">
+				<h5>$index</h5>
+				{{$index}}
+			</a>
+				<h5> Timely Decision</h5>
+				{{request.timelyDecision}}
+				<h5>Timely Effectuation</h5>
+				{{request.timelyEffectuation}}
+				<h5>Timely Oral Notice</h5>
+				{{request.timelyOralNotification}}
+				<h5>Timely Written Notice</h5>
+				{{request.timelyWrittenNotification}}
+	</div>
+</div>
+
+<!-- <div class="container">
 
 	<div class="row well" ng-repeat="request in universeCtrl.universe">
 		<div class="col-md-2">
@@ -30,4 +51,4 @@
 			{{request.timelyWrittenNotification}}
 		</div>
 	</div>
-</div>
+</div> -->

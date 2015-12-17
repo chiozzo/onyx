@@ -119,6 +119,44 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
     }
   };
 
+  self.labels = {
+    caseType: null,
+    priority: 'Standard',
+    exception: 'No',
+    reimbursement: 'No',
+    extendApproval: 'No'
+  };
+
+  self.changeLabels = function(field) {
+    switch (field) {
+      case 'caseType': if(self.caseType === 'CD') {
+          self.labels.caseType = "Coverage Determination";
+        } else {
+          self.labels.caseType = "Redetermination";
+        } break;
+      case 'universeExpedited': if(self.universeExpedited) {
+          self.labels.priority = "Expedited";
+        } else {
+          self.labels.priority = "Standard";
+        } break;
+      case 'universeException': if(self.universeException) {
+          self.labels.exception = "Yes";
+        } else {
+          self.labels.exception = "No";
+        } break;
+      case 'universeReimbursement': if(self.universeReimbursement) {
+          self.labels.reimbursement = "DMR";
+        } else {
+          self.labels.reimbursement = "No";
+        } break;
+      case 'universeExtendedApproval': if(self.universeExtendedApproval) {
+          self.labels.extendApproval = "Yes, if Approved within 24 hours";
+        } else {
+          self.labels.extendApproval = "No";
+        } break;
+    }
+  };
+
 
 /**
  * parseInputFile is a copy pasta function and uses the directive 'onReadFile'.
@@ -164,6 +202,7 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
   };
 
   self.makeUniverseType = function(caseType, priority, exception, reimbursement) {
+    console.log('makeUniverseType run');
     if (caseType === 'CD') {
       if (reimbursement) {
         exception = false;

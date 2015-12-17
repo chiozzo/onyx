@@ -10,6 +10,10 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
       //I want multiple templatesUrls and/or controllers
     })
    */
+    .state('materialTest', {
+      url: '/materialTest',
+      templateUrl: 'partial/materialTest.html'
+    })
     .state('fileUpload', {
       url: '/fileUpload',
       templateUrl: 'partial/fileUpload.html'
