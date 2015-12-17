@@ -23,17 +23,17 @@ app.factory('caseVault', [function() {
   };
 
   var setSLA = function(receivedDate, request) {
+    var reimbursement = request.reimbursement;
     var caseType = request.caseType;
     var priority = request.priority;
     var extendApproval = request.extendApproval;
     var SLA = null;
     receivedDate = receivedDate.getTime();
 
-    // Implement switch here
-
-    if(caseType === 'CD') {
-      if(false) {
-        // set DMR SLA
+    if (caseType === 'CD') {
+      if (reimbursement) {
+        SLA = days14;
+        request.dueDate = new Date(new Date(receivedDate + SLA).setHours(23,59,59,999));
       } else {
         if (priority === true) {
           SLA = expeditedCDSLA;
@@ -41,15 +41,16 @@ app.factory('caseVault', [function() {
           SLA = standardCDSLA;
         }
       }
-      if(SLA !== null) {
-        if(extendApproval && request.decision === 'Approved') {
+      if (SLA !== null) {
+        if (extendApproval && request.decision === 'Approved') {
           SLA += hours24;
         }
         request.dueDate = new Date(receivedDate + SLA);
       }
     } else if (caseType === 'RD') {
-      if(false) {
-        // set DMR SLA
+      if (reimbursement) {
+        SLA = days14;
+        request.dueDate = new Date(new Date(receivedDate + SLA).setHours(23,59,59,999));
       } else {
         if (priority === true) {
           SLA = expeditedRDSLA;
@@ -59,8 +60,8 @@ app.factory('caseVault', [function() {
           SLA = null;
         }
       }
-      if(SLA !== null) {
-        if(extendApproval && request.decision === 'Approved') {
+      if (SLA !== null) {
+        if (extendApproval && request.decision === 'Approved') {
           SLA += hours24;
         }
         request.dueDate = new Date(new Date(receivedDate + SLA).setHours(23,59,59,999));
@@ -100,9 +101,9 @@ app.factory('caseVault', [function() {
       var SLA = dueDate - receivedDate;
 
       // When decision and received dates are not null, flag decision timely or not
-      if(decisionDate !== null && receivedDate !== null) {
+      if (decisionDate !== null && receivedDate !== null) {
         var timeliness = decisionDate - receivedDate;
-        if(timeliness >= 0 && timeliness <= SLA) {
+        if (timeliness >= 0 && timeliness <= SLA) {
           request.timelyDecision = true;
         } else {
           request.timelyDecision = false;
@@ -125,9 +126,9 @@ app.factory('caseVault', [function() {
       var SLA = dueDate - receivedDate;
 
       // When effectuation and received dates are not null, flag effectuation timely or not
-      if(effectuationDate !== null && receivedDate !== null) {
+      if (effectuationDate !== null && receivedDate !== null) {
         var timeliness = effectuationDate - receivedDate;
-        if(timeliness >= 0 && timeliness <= SLA){
+        if (timeliness >= 0 && timeliness <= SLA){
           request.timelyEffectuation = true;
         } else {
           request.timelyEffectuation = false;
@@ -150,15 +151,15 @@ app.factory('caseVault', [function() {
       var SLA = dueDate - receivedDate;
 
       // When effectuation and received dates are not null, flag effectuation timely or not
-      if(oralNotificationDate !== null && receivedDate !== null) {
+      if (oralNotificationDate !== null && receivedDate !== null) {
         var timeliness = oralNotificationDate - receivedDate;
-        if(timeliness >= 0 && timeliness <= SLA) {
+        if (timeliness >= 0 && timeliness <= SLA) {
           request.timelyOralNotification = true;
         } else {
           request.timelyOralNotification = false;
         }
       }
-      if(request.writtenNotificationDate !== null) {
+      if (request.writtenNotificationDate !== null) {
         request = recalcTimelyWrittenNotification(request);
       }
       return request;
@@ -176,13 +177,13 @@ app.factory('caseVault', [function() {
 
       var SLA = dueDate - receivedDate;
 
-      if(request.timelyOralNotification === true && request.priority === true) {
+      if (request.timelyOralNotification === true && request.priority === true) {
         SLA += hours24;
       }
 
-      if(writtenNotificationDate !== null && receivedDate !== null) {
+      if (writtenNotificationDate !== null && receivedDate !== null) {
         var timeliness = writtenNotificationDate - receivedDate;
-        if(timeliness >= 0 && timeliness <= SLA) {
+        if (timeliness >= 0 && timeliness <= SLA) {
           request.timelyWrittenNotification = true;
         } else {
           request.timelyWrittenNotification = false;
@@ -193,12 +194,12 @@ app.factory('caseVault', [function() {
     setDueDate: function(request) {
       var receivedDate = null;
       if (request.exceptionRequest) {
-        if(request.ssDate !== null) {
+        if (request.ssDate !== null) {
           receivedDate = request.ssDate;
           request = setSLA(receivedDate, request);
         }
       } else if (!request.exceptionRequest) {
-        if(request.receivedDate !== null) {
+        if (request.receivedDate !== null) {
           receivedDate = request.receivedDate;
           request = setSLA(receivedDate, request);
         }

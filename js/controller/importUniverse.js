@@ -88,6 +88,34 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
       writtenNotificationTime: "Time written notification provided to enrollee",
       ssDate: "Date prescriber supporting statement received",
       ssTime: "Time prescriber supporting statement received"
+    },
+    DMRCD: {
+      receivedDate: "Date the request was received",
+      receivedTime: "Time the request was received",
+      decisionDate: "Date of plan decision",
+      decisionTime: "Time of plan decision",
+      effectuationDate: "Date effectuated in the plan's system",
+      effectuationTime: "Time effectuated in the plans' system",
+      oralNotificationDate: "Date oral notification provided to enrollee",
+      oralNotificationTime: "Time oral notification provided to enrollee",
+      writtenNotificationDate: "Date written notification provided to enrollee",
+      writtenNotificationTime: "Time written notification provided to enrollee",
+      ssDate: "Date prescriber supporting statement received",
+      ssTime: "Time prescriber supporting statement received"
+    },
+    DMRRD: {
+      receivedDate: "Date the request was received",
+      receivedTime: "Time the request was received",
+      decisionDate: "Date of plan decision",
+      decisionTime: "Time of plan decision",
+      effectuationDate: "Date effectuated in the plan's system",
+      effectuationTime: "Time effectuated in the plans' system",
+      oralNotificationDate: "Date oral notification provided to enrollee",
+      oralNotificationTime: "Time oral notification provided to enrollee",
+      writtenNotificationDate: "Date written notification provided to enrollee",
+      writtenNotificationTime: "Time written notification provided to enrollee",
+      ssDate: "Date prescriber supporting statement received",
+      ssTime: "Time prescriber supporting statement received"
     }
   };
 
@@ -95,12 +123,16 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
 /**
  * parseInputFile is a copy pasta function and uses the directive 'onReadFile'.
  */
-  self.parseInputFile = function(fileText, caseType, priority, exception, extendApproval){
+  self.parseInputFile = function(fileText, caseType, priority, exception, extendApproval, reimbursement){
     // fileText = fileText.replace(/( )/g, '_');
-    var universeType = self.universeTypes[self.makeUniverseType(caseType, priority, exception)];
+    var universeType = self.universeTypes[self.makeUniverseType(caseType, priority, exception, reimbursement)];
 
     if (caseType === 'RD') {
       exception = false;
+    }
+    if (reimbursement) {
+      exception = false;
+      priority = false;
     }
 
     // Need functionality to convert tab delimited to JSON. fileText is loading JSON file in meantime.
@@ -110,8 +142,12 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
     var universe = JSON.parse(fileText);
     // console.log("JSON.parse", universe);
     universe.map(function(request, index, array) {
+      request.reimbursement = reimbursement;
       request.exceptionRequest = exception;
       request.extendApproval = extendApproval;
+      request.caseType = caseType;
+      request.priority = priority;
+      request.decision = request["Was the case approved or denied?"];
       request.receivedDate = self.CMSToDate(request[universeType.receivedDate], request[universeType.receivedTime]);
       if (request[universeType.ssDate] !== null) {
         request.ssDate = self.CMSToDate(request[universeType.ssDate], request[universeType.ssTime]);
@@ -120,9 +156,6 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
       request.effectuationDate = self.CMSToDate(request[universeType.effectuationDate], request[universeType.effectuationTime]);
       request.oralNotificationDate = self.CMSToDate(request[universeType.oralNotificationDate], request[universeType.oralNotificationTime]);
       request.writtenNotificationDate = self.CMSToDate(request[universeType.writtenNotificationDate], request[universeType.writtenNotificationTime]);
-      request.caseType = caseType;
-      request.priority = priority;
-      request.decision = request["Was the case approved or denied?"];
       // "Disposition of the request" is also a field that may need to be evaluated
       request = caseVault.setDueDate(request);
       return request;
@@ -130,10 +163,15 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
     caseVault.setUniverse(universe);
   };
 
-  self.makeUniverseType = function(caseType, priority, exception) {
+  self.makeUniverseType = function(caseType, priority, exception, reimbursement) {
+    console.log('makeUniverseType run');
     if (caseType === 'CD') {
-      if (false) {
-        // set DMR universeType
+      if (reimbursement) {
+        exception = false;
+        priority = false;
+        self.universeType = 'DMRCD';
+        console.log("reimbursement", reimbursement);
+        console.log('DMRCD');
       } else {
         if (!exception) {
           if (priority === false) {
@@ -151,8 +189,11 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
       }
     } else if (caseType === 'RD') {
       exception = false;
-      if (false) {
-        // set DMR universeType
+      if (reimbursement) {
+        priority = false;
+        self.universeType = 'DMRRD';
+        console.log("reimbursement", reimbursement);
+        console.log('DMRRD');
       } else {
         if (priority === false) {
           self.universeType = 'SRD';
