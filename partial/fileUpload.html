@@ -1,0 +1,39 @@
+<div class="container" ng-controller="importUniverse as import">
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+			<h4>What kind of universe will you be uploading?</h4>
+		</div>
+		<div class="col-md-12">
+			<label for="caseType">Case Type</label>
+			<select name="caseType" ng-model="import.caseType" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement)">
+				<option value="CD">CD</option>
+				<option value="RD">RD</option>
+			</select>
+		</div>
+		<div class="col-md-12" ng-hide="import.universeReimbursement">
+			<label for="universeExpedited" ng-show="import.universeExpedited === undefined">Priority</label>
+			<label for="universeExpedited" ng-show="import.universeExpedited">Expedited</label>
+			<label for="universeExpedited" ng-show="import.universeExpedited === false">Standard</label>
+			<input name="universeExpedited" type="checkbox" ng-model="import.universeExpedited" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement)">
+		</div>
+		<div class="col-md-12" ng-hide="import.caseType === 'RD' || import.universeReimbursement">
+			<label for="universeException">Exception</label>
+			<input name="universeException" type="checkbox" ng-model="import.universeException" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement)">
+		</div>
+		<div class="col-md-12" ng-hide="import.universeException">
+			<label for="universeReimbursement">Reimbursement?</label>
+			<input name="universeReimbursement" type="checkbox" ng-model="import.universeReimbursement" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement)">
+		</div>
+		<div class="col-md-12">
+			<label for="universeExtendedApproval">Approved within 24 hours after SLA?</label>
+			<input name="universeExtendedApproval" type="checkbox" ng-model="import.universeExtendedApproval">
+		</div>
+		<div class="col-md-12">
+			<p class="col-md-6" style="text-align: center;">This audit tool is currently compatible with the following universe types: <b>SCD, ECD, SCDER, ECDER, SRD, ERD, DMR, DMRRD</b></p>
+			<input class="col-md-6" style="text-align: center;" name="fileUpload" type="file" on-read-file="import.parseInputFile($fileContents, import.caseType, import.universeExpedited, import.universeException, import.universeExtendedApproval, import.universeReimbursement)">
+		</div>
+		<div class="col-md-6 col-md-offset-3" ng-show="import.universeType">
+			<h3>It looks like you're uploading an <b>{{import.universeType}}</b> universe. Go ahead; you're good to go!</h3>
+		</div>
+	</div>
+</div>
