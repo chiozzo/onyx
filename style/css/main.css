@@ -1,4 +1,11 @@
-* {
-  text-align: center; }
+.uploadNavToggle {
+  position: absolute;
+  top: 20px;
+  left: 20px; }
+
+.toolNavToggle {
+  position: absolute;
+  top: 42px;
+  right: 42px; }
 
 /*# sourceMappingURL=main.css.map */

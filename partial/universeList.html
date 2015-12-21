@@ -1,54 +1,128 @@
-<div ng-repeat="request in universeCtrl.universe">
-	<div layout="row" layout-xs="column" layout-align="center center">
-	    <h5>First Name</h5>
-			{{request['Beneficiary First Name']}}
-			<h5>Last Name</h5>
-			{{request['Beneficiary Last Name']}}
-			<a ng-href="#/universe/{{$index}}">
-				<h5>$index</h5>
-				{{$index}}
-			</a>
-				<h5> Timely Decision</h5>
-				{{request.timelyDecision}}
-				<h5>Timely Effectuation</h5>
-				{{request.timelyEffectuation}}
-				<h5>Timely Oral Notice</h5>
-				{{request.timelyOralNotification}}
-				<h5>Timely Written Notice</h5>
-				{{request.timelyWrittenNotification}}
+<div layout="row">
+	<div flex>
+		<md-switch ng-model="universeCtrl.timelyFilter.timelyDecision" aria-label="timelyDecisionFilter">Filter by Untimely Decisions</md-switch>
+	</div>
+	<div flex>
+		<md-switch ng-model="universeCtrl.timelyFilter.timelyEffectuation" aria-label="timelyEffectuationFilter">Filter by Untimely Effectuation</md-switch>
+	</div>
+	<div flex>
+		<md-switch ng-model="universeCtrl.timelyFilter.timelyNotification" aria-label="timelyNotificationFilter">Filter by Untimely Notification</md-switch>
 	</div>
 </div>
 
-<!-- <div class="container">
 
-	<div class="row well" ng-repeat="request in universeCtrl.universe">
-		<div class="col-md-2">
-			<h5>First Name</h5>
-			{{request['Beneficiary First Name']}}
-			<h5>Last Name</h5>
-			{{request['Beneficiary Last Name']}}
+<div ng-repeat="request in universeCtrl.universe | untimelyDecisionsFilter">
+	<div layout="row" layout-margin layout-fill layout-align="center center">
+		<div flex>
+			<md-button class="md-primary md-raised" layout-padding ng-href="#/universe/{{$index}}">
+				Universe row #{{$index + 1}}
+			</md-button>
 		</div>
-		<div class="col-md-1">
-			<a ng-href="#/universe/{{$index}}">
-				<h5>$index</h5>
-				{{$index}}
-			</a>
+		<div flex>
+			<p>First Name</p><p>{{request['Beneficiary First Name']}}</p>
 		</div>
-		<div class="col-md-2">
-			<h5> Timely Decision</h5>
-			{{request.timelyDecision}}
+		<div flex>
+			<p>Last Name</p><p>{{request['Beneficiary Last Name']}}</p>
 		</div>
-		<div class="col-md-2">
-			<h5>Timely Effectuation</h5>
-			{{request.timelyEffectuation}}
+		<div flex>
+			<p>Timely Decision</p><p>{{request.timelyDecision}}</p>
 		</div>
-		<div class="col-md-2">
-			<h5>Timely Oral Notice</h5>
-			{{request.timelyOralNotification}}
+		<div flex>
+			<p>Timely Effectuation</p><p>{{request.timelyEffectuation}}</p>
 		</div>
-		<div class="col-md-3">
-			<h5>Timely Written Notice</h5>
-			{{request.timelyWrittenNotification}}
+		<div flex>
+			<p>Timely Oral Notice</p><p>{{request.timelyOralNotification}}</p>
+		</div>
+		<div flex>
+			<p>Timely Written Notice</p><p>{{request.timelyWrittenNotification}}</p>
 		</div>
 	</div>
+	<md-divider md-inset></md-divider>
+</div>
+<!--
+<div ng-if="universeCtrl.timelyFilter.timelyNotification" ng-repeat="request in universeCtrl.untimelyNotifications">
+	<div layout="row" layout-margin layout-fill layout-align="center center">
+		<div flex>
+			<md-button class="md-primary md-raised" layout-padding ng-href="#/universe/{{$index}}">
+				Universe row #{{$index + 1}}
+			</md-button>
+		</div>
+		<div flex>
+			<p>First Name: {{request['Beneficiary First Name']}}</p>
+		</div>
+		<div flex>
+			<p>Last Name: {{request['Beneficiary Last Name']}}</p>
+		</div>
+		<div flex>
+			<p>Timely Decision: {{request.timelyDecision}}</p>
+		</div>
+		<div flex>
+			<p>Timely Effectuation: {{request.timelyEffectuation}}</p>
+		</div>
+		<div flex>
+			<p>Timely Oral Notice: {{request.timelyOralNotification}}</p>
+		</div>
+		<div flex>
+			<p>Timely Written Notice: {{request.timelyWrittenNotification}}</p>
+		</div>
+	</div>
+	<md-divider md-inset></md-divider>
+</div>
+
+<div ng-if="universeCtrl.timelyFilter.timelyEffectuation" ng-repeat="request in universeCtrl.untimelyEffectuations">
+	<div layout="row" layout-margin layout-fill layout-align="center center">
+		<div flex>
+			<md-button class="md-primary md-raised" layout-padding ng-href="#/universe/{{$index}}">
+				Universe row #{{$index + 1}}
+			</md-button>
+		</div>
+		<div flex>
+			<p>First Name: {{request['Beneficiary First Name']}}</p>
+		</div>
+		<div flex>
+			<p>Last Name: {{request['Beneficiary Last Name']}}</p>
+		</div>
+		<div flex>
+			<p>Timely Decision: {{request.timelyDecision}}</p>
+		</div>
+		<div flex>
+			<p>Timely Effectuation: {{request.timelyEffectuation}}</p>
+		</div>
+		<div flex>
+			<p>Timely Oral Notice: {{request.timelyOralNotification}}</p>
+		</div>
+		<div flex>
+			<p>Timely Written Notice: {{request.timelyWrittenNotification}}</p>
+		</div>
+	</div>
+	<md-divider md-inset></md-divider>
+</div>
+
+<div ng-if="universeCtrl.timelyFilter.timelyDecision" ng-repeat="request in universeCtrl.untimelyDecisions">
+	<div layout="row" layout-margin layout-fill layout-align="center center">
+		<div flex>
+			<md-button class="md-primary md-raised" layout-padding ng-href="#/universe/{{$index}}">
+				Universe row #{{$index + 1}}
+			</md-button>
+		</div>
+		<div flex>
+			<p>First Name: {{request['Beneficiary First Name']}}</p>
+		</div>
+		<div flex>
+			<p>Last Name: {{request['Beneficiary Last Name']}}</p>
+		</div>
+		<div flex>
+			<p>Timely Decision: {{request.timelyDecision}}</p>
+		</div>
+		<div flex>
+			<p>Timely Effectuation: {{request.timelyEffectuation}}</p>
+		</div>
+		<div flex>
+			<p>Timely Oral Notice: {{request.timelyOralNotification}}</p>
+		</div>
+		<div flex>
+			<p>Timely Written Notice: {{request.timelyWrittenNotification}}</p>
+		</div>
+	</div>
+	<md-divider md-inset></md-divider>
 </div> -->

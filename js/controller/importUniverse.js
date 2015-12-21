@@ -121,10 +121,10 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
 
   self.labels = {
     caseType: null,
-    priority: 'Standard',
-    exception: 'No',
-    reimbursement: 'No',
-    extendApproval: 'No'
+    priority: 'Standard or Expedited?',
+    exception: 'PA or Exception?',
+    reimbursement: 'Preservice or DMR?',
+    extendApproval: 'Late Approval?'
   };
 
   self.changeLabels = function(field) {
@@ -140,19 +140,19 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
           self.labels.priority = "Standard";
         } break;
       case 'universeException': if(self.universeException) {
-          self.labels.exception = "Yes";
+          self.labels.exception = "Exception";
         } else {
-          self.labels.exception = "No";
+          self.labels.exception = "Prior Authorization";
         } break;
       case 'universeReimbursement': if(self.universeReimbursement) {
           self.labels.reimbursement = "DMR";
         } else {
-          self.labels.reimbursement = "No";
+          self.labels.reimbursement = "Preservice";
         } break;
       case 'universeExtendedApproval': if(self.universeExtendedApproval) {
-          self.labels.extendApproval = "Yes, if Approved within 24 hours";
+          self.labels.extendApproval = "If Approved within 24 hours";
         } else {
-          self.labels.extendApproval = "No";
+          self.labels.extendApproval = "Without grace period";
         } break;
     }
   };

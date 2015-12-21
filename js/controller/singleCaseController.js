@@ -11,6 +11,44 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
   var DMRSLA = days14;
   var today = new Date();
 
+  self.labels = {
+    caseType: null,
+    priority: 'Standard or Expedited?',
+    exception: 'PA or Exception?',
+    reimbursement: 'Preservice or DMR?',
+    extendApproval: 'Late Approval?'
+  };
+
+  self.changeLabels = function(field) {
+    switch (field) {
+      case 'caseType': if(self.caseStatus.caseType === 'CD') {
+          self.labels.caseType = "Coverage Determination";
+        } else {
+          self.labels.caseType = "Redetermination";
+        } break;
+      case 'expedited': if(self.caseStatus.expedited) {
+          self.labels.priority = "Expedited";
+        } else {
+          self.labels.priority = "Standard";
+        } break;
+      case 'exception': if(self.caseStatus.exception) {
+          self.labels.exception = "Exception";
+        } else {
+          self.labels.exception = "Prior Authorization";
+        } break;
+      case 'reimbursement': if(self.caseStatus.reimbursement) {
+          self.labels.reimbursement = "DMR";
+        } else {
+          self.labels.reimbursement = "Preservice";
+        } break;
+      case 'extendApproval': if(self.caseStatus.extendApproval) {
+          self.labels.extendApproval = "If Approved within 24 hours";
+        } else {
+          self.labels.extendApproval = "Without grace period";
+        } break;
+    }
+  };
+
   self.restrictInput = null;
 
   self.makeRestrictions = function() {
@@ -34,12 +72,12 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
     timelyEffectuation: null,
     timelyWrittenNotification: null,
     timelyOralNotification: null,
-    caseType: 'CD',
+    caseType: null,
     priority: null,
-    decision: 'Pending',
+    decision: 'Approved or Denied?',
     dueDate: null,
     SLA: null,
-    exceptionRequest: "What's an exception?",
+    // exception: "What's an exception?",
     extendApproval: 'NO'
   };
 
