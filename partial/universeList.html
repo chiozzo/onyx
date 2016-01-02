@@ -11,11 +11,46 @@
 </div>
 
 
-<div ng-repeat="request in universeCtrl.universe | untimelyDecisionsFilter">
+<div ng-if="!universeCtrl.timelyFilter.timelyDecision" ng-repeat="request in universeCtrl.universe">
+	<!-- This should be it's own partial to accomidate for the custom filters -->
+
+
 	<div layout="row" layout-margin layout-fill layout-align="center center">
 		<div flex>
-			<md-button class="md-primary md-raised" layout-padding ng-href="#/universe/{{$index}}">
-				Universe row #{{$index + 1}}
+			<md-button class="md-primary md-raised" layout-padding ng-click="universeCtrl.showTabDialog($event, $index)">
+				Case #{{$index + 1}}
+			</md-button>
+		</div>
+		<div flex>
+			<p>First Name</p><p>{{request['Beneficiary First Name']}}</p>
+		</div>
+		<div flex>
+			<p>Last Name</p><p>{{request['Beneficiary Last Name']}}</p>
+		</div>
+		<div flex>
+			<p>Timely Decision</p><p>{{request.timelyDecision}}</p>
+		</div>
+		<div flex>
+			<p>Timely Effectuation</p><p>{{request.timelyEffectuation}}</p>
+		</div>
+		<div flex>
+			<p>Timely Oral Notice</p><p>{{request.timelyOralNotification}}</p>
+		</div>
+		<div flex>
+			<p>Timely Written Notice</p><p>{{request.timelyWrittenNotification}}</p>
+		</div>
+	</div>
+	<md-divider md-inset></md-divider>
+
+
+	<!--  -->
+</div>
+
+<div ng-if="universeCtrl.timelyFilter.timelyDecision" ng-repeat="request in universeCtrl.universe | untimelyDecisionsFilter">
+	<div layout="row" layout-margin layout-fill layout-align="center center">
+		<div flex>
+			<md-button class="md-primary md-raised" layout-padding ng-click="universeCtrl.showTabDialog($event, $index)">
+				Case #{{$index + 1}}
 			</md-button>
 		</div>
 		<div flex>
@@ -97,32 +132,4 @@
 	</div>
 	<md-divider md-inset></md-divider>
 </div>
-
-<div ng-if="universeCtrl.timelyFilter.timelyDecision" ng-repeat="request in universeCtrl.untimelyDecisions">
-	<div layout="row" layout-margin layout-fill layout-align="center center">
-		<div flex>
-			<md-button class="md-primary md-raised" layout-padding ng-href="#/universe/{{$index}}">
-				Universe row #{{$index + 1}}
-			</md-button>
-		</div>
-		<div flex>
-			<p>First Name: {{request['Beneficiary First Name']}}</p>
-		</div>
-		<div flex>
-			<p>Last Name: {{request['Beneficiary Last Name']}}</p>
-		</div>
-		<div flex>
-			<p>Timely Decision: {{request.timelyDecision}}</p>
-		</div>
-		<div flex>
-			<p>Timely Effectuation: {{request.timelyEffectuation}}</p>
-		</div>
-		<div flex>
-			<p>Timely Oral Notice: {{request.timelyOralNotification}}</p>
-		</div>
-		<div flex>
-			<p>Timely Written Notice: {{request.timelyWrittenNotification}}</p>
-		</div>
-	</div>
-	<md-divider md-inset></md-divider>
-</div> -->
+ -->
