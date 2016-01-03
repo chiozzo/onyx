@@ -16,7 +16,8 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
     priority: 'Standard or Expedited?',
     exception: 'PA or Exception?',
     reimbursement: 'Preservice or DMR?',
-    extendApproval: 'Late Approval?'
+    extendApproval: 'Late Approval?',
+    decision: 'Approved or Denied?'
   };
 
   self.changeLabels = function(field) {
@@ -26,7 +27,7 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
         } else {
           self.labels.caseType = "Redetermination";
         } break;
-      case 'expedited': if(self.caseStatus.expedited) {
+      case 'priority': if(self.caseStatus.priority) {
           self.labels.priority = "Expedited";
         } else {
           self.labels.priority = "Standard";
@@ -46,6 +47,11 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
         } else {
           self.labels.extendApproval = "Without grace period";
         } break;
+      case 'decision': if(self.caseStatus.decision) {
+          self.labels.decision = "Approved";
+        } else {
+          self.labels.decision = "Denied";
+        } break;
     }
   };
 
@@ -55,7 +61,7 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
     self.restrictInput = {
       receivedMinDate: new Date(today.getTime() - days7),
       //Could next line be a problem if the user stays logged in for many days?
-      receivedMaxDate: new Date(today.getTime() + hours24)
+      receivedMaxDate: new Date(today.getTime() + days7)
     };
   };
   self.makeRestrictions();
@@ -74,11 +80,15 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
     timelyOralNotification: null,
     caseType: null,
     priority: null,
-    decision: 'Approved or Denied?',
+    decision: null,
     dueDate: null,
     SLA: null,
     // exception: "What's an exception?",
-    extendApproval: 'NO'
+    extendApproval: null
+  };
+
+  self.setDueDate = function () {
+    return caseVault.setDueDate(self.caseStatus);
   };
 
 

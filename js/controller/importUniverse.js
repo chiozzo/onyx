@@ -181,7 +181,7 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
     // console.log("JSON.parse", universe);
     universe.map(function(request, index, array) {
       request.reimbursement = reimbursement;
-      request.exceptionRequest = exception;
+      request.exception = exception;
       request.extendApproval = extendApproval;
       request.caseType = caseType;
       request.priority = priority;
