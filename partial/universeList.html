@@ -1,135 +1,28 @@
-<div layout="row">
+<div layout="row" layout-margin layout-padding>
 	<div flex>
-		<md-switch ng-model="universeCtrl.timelyFilter.timelyDecision" aria-label="timelyDecisionFilter">Filter by Untimely Decisions</md-switch>
-	</div>
-	<div flex>
-		<md-switch ng-model="universeCtrl.timelyFilter.timelyEffectuation" aria-label="timelyEffectuationFilter">Filter by Untimely Effectuation</md-switch>
+		<md-switch ng-model="universeCtrl.untimelyFilter.timelyDecision" aria-label="timelyDecisionFilter">Filter by Untimely Decisions</md-switch>
 	</div>
 	<div flex>
-		<md-switch ng-model="universeCtrl.timelyFilter.timelyNotification" aria-label="timelyNotificationFilter">Filter by Untimely Notification</md-switch>
+		<md-switch ng-model="universeCtrl.untimelyFilter.timelyEffectuation" aria-label="timelyEffectuationFilter">Filter by Untimely Effectuation</md-switch>
+	</div>
+	<div flex>
+		<md-switch ng-model="universeCtrl.untimelyFilter.timelyNotification" aria-label="timelyNotificationFilter">Filter by Untimely Notification</md-switch>
 	</div>
 </div>
 
 
-<div ng-if="!universeCtrl.timelyFilter.timelyDecision" ng-repeat="request in universeCtrl.universe">
-	<!-- This should be it's own partial to accomidate for the custom filters -->
-
-
-	<div layout="row" layout-margin layout-fill layout-align="center center">
-		<div flex>
-			<md-button class="md-primary md-raised" layout-padding ng-click="universeCtrl.showTabDialog($event, $index)">
-				Case #{{$index + 1}}
-			</md-button>
-		</div>
-		<div flex>
-			<p>First Name</p><p>{{request['Beneficiary First Name']}}</p>
-		</div>
-		<div flex>
-			<p>Last Name</p><p>{{request['Beneficiary Last Name']}}</p>
-		</div>
-		<div flex>
-			<p>Timely Decision</p><p>{{request.timelyDecision}}</p>
-		</div>
-		<div flex>
-			<p>Timely Effectuation</p><p>{{request.timelyEffectuation}}</p>
-		</div>
-		<div flex>
-			<p>Timely Oral Notice</p><p>{{request.timelyOralNotification}}</p>
-		</div>
-		<div flex>
-			<p>Timely Written Notice</p><p>{{request.timelyWrittenNotification}}</p>
-		</div>
-	</div>
-	<md-divider md-inset></md-divider>
-
-
-	<!--  -->
+<div ng-if="!universeCtrl.untimelyFilter.timelyDecision && !universeCtrl.untimelyFilter.timelyEffectuation && !universeCtrl.untimelyFilter.timelyNotification" ng-repeat="request in universeCtrl.universe">
+	<div ng-include="'partial/universeListing.html'"></div>
 </div>
 
-<div ng-if="universeCtrl.timelyFilter.timelyDecision" ng-repeat="request in universeCtrl.universe | untimelyDecisionsFilter">
-	<div layout="row" layout-margin layout-fill layout-align="center center">
-		<div flex>
-			<md-button class="md-primary md-raised" layout-padding ng-click="universeCtrl.showTabDialog($event, $index)">
-				Case #{{$index + 1}}
-			</md-button>
-		</div>
-		<div flex>
-			<p>First Name</p><p>{{request['Beneficiary First Name']}}</p>
-		</div>
-		<div flex>
-			<p>Last Name</p><p>{{request['Beneficiary Last Name']}}</p>
-		</div>
-		<div flex>
-			<p>Timely Decision</p><p>{{request.timelyDecision}}</p>
-		</div>
-		<div flex>
-			<p>Timely Effectuation</p><p>{{request.timelyEffectuation}}</p>
-		</div>
-		<div flex>
-			<p>Timely Oral Notice</p><p>{{request.timelyOralNotification}}</p>
-		</div>
-		<div flex>
-			<p>Timely Written Notice</p><p>{{request.timelyWrittenNotification}}</p>
-		</div>
-	</div>
-	<md-divider md-inset></md-divider>
-</div>
-<!--
-<div ng-if="universeCtrl.timelyFilter.timelyNotification" ng-repeat="request in universeCtrl.untimelyNotifications">
-	<div layout="row" layout-margin layout-fill layout-align="center center">
-		<div flex>
-			<md-button class="md-primary md-raised" layout-padding ng-href="#/universe/{{$index}}">
-				Universe row #{{$index + 1}}
-			</md-button>
-		</div>
-		<div flex>
-			<p>First Name: {{request['Beneficiary First Name']}}</p>
-		</div>
-		<div flex>
-			<p>Last Name: {{request['Beneficiary Last Name']}}</p>
-		</div>
-		<div flex>
-			<p>Timely Decision: {{request.timelyDecision}}</p>
-		</div>
-		<div flex>
-			<p>Timely Effectuation: {{request.timelyEffectuation}}</p>
-		</div>
-		<div flex>
-			<p>Timely Oral Notice: {{request.timelyOralNotification}}</p>
-		</div>
-		<div flex>
-			<p>Timely Written Notice: {{request.timelyWrittenNotification}}</p>
-		</div>
-	</div>
-	<md-divider md-inset></md-divider>
+<div ng-if="universeCtrl.untimelyFilter.timelyDecision" ng-repeat="request in universeCtrl.universe | untimelyDecisionsFilter">
+	<div ng-include="'partial/universeListing.html'"></div>
 </div>
 
-<div ng-if="universeCtrl.timelyFilter.timelyEffectuation" ng-repeat="request in universeCtrl.untimelyEffectuations">
-	<div layout="row" layout-margin layout-fill layout-align="center center">
-		<div flex>
-			<md-button class="md-primary md-raised" layout-padding ng-href="#/universe/{{$index}}">
-				Universe row #{{$index + 1}}
-			</md-button>
-		</div>
-		<div flex>
-			<p>First Name: {{request['Beneficiary First Name']}}</p>
-		</div>
-		<div flex>
-			<p>Last Name: {{request['Beneficiary Last Name']}}</p>
-		</div>
-		<div flex>
-			<p>Timely Decision: {{request.timelyDecision}}</p>
-		</div>
-		<div flex>
-			<p>Timely Effectuation: {{request.timelyEffectuation}}</p>
-		</div>
-		<div flex>
-			<p>Timely Oral Notice: {{request.timelyOralNotification}}</p>
-		</div>
-		<div flex>
-			<p>Timely Written Notice: {{request.timelyWrittenNotification}}</p>
-		</div>
-	</div>
-	<md-divider md-inset></md-divider>
+<div ng-if="universeCtrl.untimelyFilter.timelyEffectuation" ng-repeat="request in universeCtrl.universe | untimelyEffectuationsFilter">
+	<div ng-include="'partial/universeListing.html'"></div>
 </div>
- -->
+
+<div ng-if="universeCtrl.untimelyFilter.timelyNotification" ng-repeat="request in universeCtrl.universe | untimelyNotificationsFilter">
+	<div ng-include="'partial/universeListing.html'"></div>
+</div>

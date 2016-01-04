@@ -1,32 +1,32 @@
 <md-dialog aria-label="{{universeDetailCtrl.universeCaseNum + 1}}">
   <form>
     <md-toolbar>
-      <div class="md-toolbar-tools">
-        <h2>Case #{{universeDetailCtrl.universeCaseNum + 1}}</h2>
+      <div class="md-toolbar-tools" layout="row">
+        <h2 flex>{{universeDetailCtrl.universeCase['Beneficiary First Name']}} {{universeDetailCtrl.universeCase['Beneficiary Last Name']}}</h2>
         <span flex></span>
-        <md-button class="md-icon-button" ng-click="cancel()">
-          <md-icon md-svg-src="/lib/bower_components/angular-material/demos/bottomSheet/demoBasicUsage/img/icons/upload.svg" aria-label="Close dialog"></md-icon>
-        </md-button>
+        <h4 flex>HICN: {{universeDetailCtrl.universeCase.beneficiaryHICN}}</h4>
       </div>
     </md-toolbar>
-    <md-dialog-content style="width:800px;max-height:810px;">
+    <md-dialog-content class="universeDetailModal">
       <md-tabs md-dynamic-height md-border-bottom>
         <md-tab label="timeliness">
           <md-content class="md-padding">
-            <p class="md-display-1">Timeliness Information</p>
-            <p>Timely Decision: {{universeDetailCtrl.universeCase.timelyDecision}}</p>
-            <p>Timely Effection: {{universeDetailCtrl.universeCase.timelyEffectuation}}</p>
-            <p>Timely Oral Notification: {{universeDetailCtrl.universeCase.timelyOralNotification}}</p>
-            <p>Timely Written Notification: {{universeDetailCtrl.universeCase.timelyWrittenNotification}}</p>
+            <p class="md-headline"><b>Timeliness Information</b></p>
+            <p>This request was <b>{{universeDetailCtrl.universeCase.decision}}</b></p>
+            <p><b>Received Date/Time: </b>{{universeDetailCtrl.universeCase.receivedDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.receivedDate | date: "shortTime"}}</p>
+            <p><b>Decision Date/Time: </b>{{universeDetailCtrl.universeCase.decisionDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.decisionDate | date: "shortTime"}}</p>
+            <p><b>Effection Date/Time: </b>{{universeDetailCtrl.universeCase.effectuationDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.effectuationDate | date: "shortTime"}}</p>
+            <p><b>Oral Notification Date/Time: </b>{{universeDetailCtrl.universeCase.oralNotificationDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.oralNotificationDate | date: "shortTime"}}</p>
+            <p><b>Written Notification Date/Time: </b>{{universeDetailCtrl.universeCase.writtenNotificationDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.writtenNotificationDate | date: "shortTime"}}</p>
+            <p><b>Due Date/Time: </b>{{universeDetailCtrl.universeCase.dueDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.dueDate | date: "shortTime"}}</p>
           </md-content>
 
         </md-tab>
         <md-tab label="drug">
           <md-content class="md-padding">
-            <p class="md-display-1">Drug Information</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor, orci enim rutrum enim, vel tempor sapien arcu a tellus. Vivamus convallis sodales ante varius gravida. Curabitur a purus vel augue ultrices ultricies id a nisl. Nullam malesuada consequat diam, a facilisis tortor volutpat et. Sed urna dolor, aliquet vitae posuere vulputate, euismod ac lorem. Sed felis risus, pulvinar at interdum quis, vehicula sed odio. Phasellus in enim venenatis, iaculis tortor eu, bibendum ante. Donec ac tellus dictum neque volutpat blandit. Praesent efficitur faucibus risus, ac auctor purus porttitor vitae. Phasellus ornare dui nec orci posuere, nec luctus mauris semper.</p>
-            <p>Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim, at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus. Nunc urna libero, viverra sit amet nisl at, hendrerit tempor turpis. Maecenas facilisis convallis mi vel tempor. Nullam vitae nunc leo. Cras sed nisl consectetur, rhoncus sapien sit amet, tempus sapien.</p>
-            <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+            <p class="md-headline"><b>Drug Information</b></p>
+            <p><b>Drug Requested: </b>{{universeDetailCtrl.universeCase["Drug Name, Strength & Dosage Form"]}}</p>
+            <p><b>Drug NDC-11: </b>{{universeDetailCtrl.universeCase.drugNDC}}</p>
           </md-content>
         </md-tab>
       </md-tabs>

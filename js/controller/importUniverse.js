@@ -122,8 +122,8 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
   self.labels = {
     caseType: null,
     priority: 'Standard or Expedited?',
-    exception: 'PA or Exception?',
-    reimbursement: 'Preservice or DMR?',
+    exception: 'Prior Auth or Exception?',
+    reimbursement: 'Preservice or Reimbursement?',
     extendApproval: 'Late Approval?'
   };
 
@@ -145,7 +145,7 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
           self.labels.exception = "Prior Authorization";
         } break;
       case 'universeReimbursement': if(self.universeReimbursement) {
-          self.labels.reimbursement = "DMR";
+          self.labels.reimbursement = "Reimbursement";
         } else {
           self.labels.reimbursement = "Preservice";
         } break;
@@ -185,6 +185,9 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
       request.extendApproval = extendApproval;
       request.caseType = caseType;
       request.priority = priority;
+      request.drugName = request["Drug Name, Strength & Dosage Form"];
+      request.drugNDC = request.NDC_11;
+      request.beneficiaryHICN = request["Beneficiary HICN"];
       request.decision = request["Was the case approved or denied?"];
       request.receivedDate = self.CMSToDate(request[universeType.receivedDate], request[universeType.receivedTime]);
       if (request[universeType.ssDate] !== null) {

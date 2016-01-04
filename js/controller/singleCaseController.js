@@ -14,9 +14,9 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
   self.labels = {
     caseType: null,
     priority: 'Standard or Expedited?',
-    exception: 'PA or Exception?',
-    reimbursement: 'Preservice or DMR?',
-    extendApproval: 'Late Approval?',
+    exception: 'Prior Auth or Exception?',
+    reimbursement: 'Preservice or Reimbursement?',
+    extendApproval: 'Evaluate this case within the CMS grace period?',
     decision: 'Approved or Denied?'
   };
 
@@ -38,14 +38,14 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
           self.labels.exception = "Prior Authorization";
         } break;
       case 'reimbursement': if(self.caseStatus.reimbursement) {
-          self.labels.reimbursement = "DMR";
+          self.labels.reimbursement = "Reimbursement";
         } else {
           self.labels.reimbursement = "Preservice";
         } break;
       case 'extendApproval': if(self.caseStatus.extendApproval) {
-          self.labels.extendApproval = "If Approved within 24 hours";
+          self.labels.extendApproval = "Yes, this case was approved within 24 hours of SLA expiration.";
         } else {
-          self.labels.extendApproval = "Without grace period";
+          self.labels.extendApproval = "No, I'd like to evaluate this case on the normal SLA.";
         } break;
       case 'decision': if(self.caseStatus.decision) {
           self.labels.decision = "Approved";
@@ -59,9 +59,9 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
 
   self.makeRestrictions = function() {
     self.restrictInput = {
-      receivedMinDate: new Date(today.getTime() - days7),
+      receivedMinDate: new Date(today.getTime() - (days14 * 26)),
       //Could next line be a problem if the user stays logged in for many days?
-      receivedMaxDate: new Date(today.getTime() + days7)
+      receivedMaxDate: new Date(today.getTime() + (days14 * 26))
     };
   };
   self.makeRestrictions();

@@ -1,11 +1,41 @@
 .uploadNavToggle {
-  position: absolute;
-  top: 20px;
-  left: 20px; }
+  position: fixed;
+  top: 12%;
+  right: 0.5%; }
 
 .toolNavToggle {
   position: absolute;
-  top: 42px;
-  right: 42px; }
+  bottom: 75px;
+  left: 25px; }
+
+.inputField * {
+  color: black; }
+
+.inputFrame {
+  background-color: #F5F5F5; }
+
+.textCenter {
+  text-align: center; }
+
+.optionFrame {
+  color: orange; }
+
+.timely, .timely * {
+  color: green;
+  font-weight: bold;
+  border-radius: 1em;
+  margin: 0;
+  padding: 0; }
+
+.untimely, .untimely * {
+  color: orange;
+  font-weight: bold;
+  border-radius: 1em;
+  margin: 0;
+  padding: 0; }
+
+.universeDetailModal {
+  width: 800px;
+  max-height: 810px; }
 
 /*# sourceMappingURL=main.css.map */

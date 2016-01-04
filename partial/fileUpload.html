@@ -1,32 +1,38 @@
 <div ng-controller="importUniverse as import">
-	<form layout="column" layout-margin>
+	<form name="fileUpload" layout="column" layout-margin>
 		<div flex>
-			<md-radio-group ng-model="import.caseType" aria-label="caseType" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement); import.changeLabels('caseType')" md-autofocus="" required>
+			<md-radio-group ng-model="import.caseType" name="caseType" aria-label="caseType" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement); import.changeLabels('caseType')" md-autofocus="" required>
 				<md-radio-button value="CD">Coverage Determination</md-radio-button>
 				<md-radio-button value="RD">Redetermination</md-radio-button>
 			</md-radio-group>
 		</div>
 
+<!--
+For some reason, this flag will not switch to false. It only toggles between true and undefined.
+ -->
 		<div flex>
-	    <md-switch ng-disabled="import.universeReimbursement && caseType === 'CD'" ng-model="import.universeExpedited" aria-label="universeExpedited" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement); import.changeLabels('universeExpedited')">{{import.labels.priority}}</md-switch>
+	    <md-switch ng-disabled="import.universeReimbursement && caseType === 'CD'" ng-model="import.universeExpedited" name="universeExpedited" aria-label="universeExpedited" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement); import.changeLabels('universeExpedited')" required>{{import.labels.priority}}</md-switch>
 	  </div>
 
 		<div flex>
-	    <md-switch ng-disabled="import.caseType === 'RD' || import.universeReimbursement" ng-model="import.universeException" aria-label="universeException" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement); import.changeLabels('universeException')">{{import.labels.exception}}</md-switch>
+	    <md-switch ng-disabled="import.caseType === 'RD' || import.universeReimbursement" ng-model="import.universeException" name="universeException" aria-label="universeException" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement); import.changeLabels('universeException')">{{import.labels.exception}}</md-switch>
 	  </div>
 
 		<div flex>
-	    <md-switch ng-disabled="import.universeException" class="md-primary" ng-model="import.universeReimbursement" aria-label="universeReimbursement" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement); import.changeLabels('universeReimbursement')">{{import.labels.reimbursement}}</md-switch>
+	    <md-switch ng-disabled="import.universeException"ng-model="import.universeReimbursement" name="universeReimbursement" aria-label="universeReimbursement" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement); import.changeLabels('universeReimbursement')">{{import.labels.reimbursement}}</md-switch>
 	  </div>
 
 		<div flex>
-	    <md-switch ng-model="import.universeExtendedApproval" aria-label="universeExtendedApproval" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement); import.changeLabels('universeExtendedApproval')">{{import.labels.extendApproval}}</md-switch>
+	    <md-switch ng-model="import.universeExtendedApproval" name="universeExtendedApproval" aria-label="universeExtendedApproval" ng-change="import.makeUniverseType(import.caseType, import.universeExpedited, import.universeException, import.universeReimbursement); import.changeLabels('universeExtendedApproval')">{{import.labels.extendApproval}}</md-switch>
 	  </div>
 
 	  <div flex ng-show="import.universeType">
-	  	<h4>You can upload your <b>{{import.universeType}}</b> universe now.</h4>
+	  	<h1 class="md-headline">
+				<p>Your universe type is</p>
+				<p><b>{{import.universeType}}</b></p>
+	  	</h1>
 	  </div>
 
-  	<input aria-label="fileUpload" type="file" on-read-file="import.parseInputFile($fileContents, import.caseType, import.universeExpedited, import.universeException, import.universeExtendedApproval, import.universeReimbursement)">
+  	<input ng-disabled="!fileUpload.$valid" aria-label="fileUpload" type="file" on-read-file="import.parseInputFile($fileContents, import.caseType, import.universeExpedited, import.universeException, import.universeExtendedApproval, import.universeReimbursement)">
 	</form>
 </div>

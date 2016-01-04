@@ -1,25 +1,16 @@
 <div ng-controller="sidenav" layout="column" ng-cloak="">
   <section layout="row" flex="">
-    <md-sidenav class="md-sidenav-left md-whiteframe-z4" md-component-id="left" md-is-locked-open="$mdMedia('gt-lg')">
+    <md-sidenav class="md-sidenav-right md-whiteframe-z4" md-component-id="right" md-is-locked-open="$mdMedia('gt-lg')">
       <md-toolbar class="md-primary">
-        <h1 class="md-toolbar-tools">Upload a Universe</h1>
+        <h1 class="md-toolbar-tools">Analyze a Universe</h1>
       </md-toolbar>
-        <div ng-include="'partial/fileUpload.html'"></div>
+      <div ng-include="'partial/fileUpload.html'"></div>
     </md-sidenav>
     <md-content flex="" layout-padding="">
     <div ng-include="'partial/singleCase.html'"></div>
-      <md-divider md-inset></md-divider>
     </md-content>
-    <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
-      <md-toolbar class="md-primary">
-        <h1 class="md-toolbar-tools">Other Tools</h1>
-      </md-toolbar>
-    </md-sidenav>
   </section>
-    <md-button aria-label="uploadNavToggle" ng-click="toggleLeft()" class="md-fab md-primary uploadNavToggle" ng-hide="isOpenLeft()">
-      <md-icon md-svg-src="/lib/bower_components/angular-material/demos/toolbar/demoBasicUsage/img/icons/menu.svg"></md-icon>
-    </md-button>
-    <md-button aria-label="toolNavToggle" ng-click="toggleRight()" ng-hide="isOpenRight()" class="md-fab md-accent toolNavToggle">
-      <md-icon md-svg-src="/lib/bower_components/angular-material/demos/toolbar/demoBasicUsage/img/icons/menu.svg"></md-icon>
-    </md-button>
+  <md-button aria-label="uploadNavToggle" ng-click="toggleRight()" class="md-fab md-primary uploadNavToggle" ng-hide="isOpenRight()">
+    <md-icon md-svg-src="/lib/bower_components/angular-material/demos/toolbar/demoBasicUsage/img/icons/menu.svg"></md-icon>
+  </md-button>
 </div>

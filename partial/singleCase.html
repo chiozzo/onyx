@@ -1,186 +1,245 @@
 <div class="container" ng-controller="singleCaseController as singleCaseCtrl">
 
-	<form layout="column" layout-gt-xs="row" layout-margin layout-align="center center">
-		<div flex>
-			<md-radio-group ng-model="singleCaseCtrl.caseStatus.caseType" aria-label="caseType" ng-change="singleCaseCtrl.changeLabels('caseType'); singleCaseCtrl.setDueDate()" md-autofocus="" required>
+	<form name="caseOptions" layout="column" layout-gt-sm="row" layout-margin layout-align="center center">
+		<md-input-container class="inputLabelText" flex>
+			<md-radio-group name="caseTypeInput" ng-model="singleCaseCtrl.caseStatus.caseType" aria-label="caseType" ng-change="singleCaseCtrl.changeLabels('caseType'); singleCaseCtrl.setDueDate()" md-autofocus="" required>
 				<md-radio-button value="CD">Coverage Determination</md-radio-button>
 				<md-radio-button value="RD">Redetermination</md-radio-button>
-			</md-radio-group>
-		</div>
+			</md-radio-group required>
+		</md-input-container>
 
 		<div flex layout="column" layout-align="center center">
-	    <p>{{singleCaseCtrl.labels.priority}}</p>
-	    <md-switch ng-disabled="singleCaseCtrl.caseStatus.reimbursement && caseType === 'CD'" ng-model="singleCaseCtrl.caseStatus.priority" aria-label="priority" ng-change="singleCaseCtrl.changeLabels('priority'); singleCaseCtrl.setDueDate()"></md-switch>
+	    <label>{{singleCaseCtrl.labels.priority}}</label>
+	    <md-switch ng-disabled="singleCaseCtrl.caseStatus.reimbursement" ng-model="singleCaseCtrl.caseStatus.priority" aria-label="priority" ng-change="singleCaseCtrl.changeLabels('priority'); singleCaseCtrl.setDueDate()"></md-switch required>
 	  </div>
 
 		<div flex layout="column" layout-align="center center">
-	    <p>{{singleCaseCtrl.labels.exception}}</p>
-	    <md-switch ng-disabled="singleCaseCtrl.caseStatus.caseType === 'RD' || singleCaseCtrl.caseStatus.reimbursement" ng-model="singleCaseCtrl.caseStatus.exception" aria-label="exception" ng-change="singleCaseCtrl.changeLabels('exception'); singleCaseCtrl.setDueDate()"></md-switch>
-	  </div>
-
-		<div flex layout="column" layout-align="center center">
-	    <p>{{singleCaseCtrl.labels.reimbursement}}</p>
+	    <label>{{singleCaseCtrl.labels.reimbursement}}</label>
 	    <md-switch ng-disabled="singleCaseCtrl.caseStatus.exception" class="md-primary" ng-model="singleCaseCtrl.caseStatus.reimbursement" aria-label="reimbursement" ng-change="singleCaseCtrl.changeLabels('reimbursement'); singleCaseCtrl.setDueDate()"></md-switch>
 	  </div>
 
 		<div flex layout="column" layout-align="center center">
-	    <p>{{singleCaseCtrl.labels.decision}}</p>
+	    <label>{{singleCaseCtrl.labels.exception}}</label>
+	    <md-switch ng-disabled="singleCaseCtrl.caseStatus.caseType === 'RD' || singleCaseCtrl.caseStatus.reimbursement" ng-model="singleCaseCtrl.caseStatus.exception" aria-label="exception" ng-change="singleCaseCtrl.changeLabels('exception'); singleCaseCtrl.setDueDate()"></md-switch>
+	  </div>
+
+		<div flex layout="column" layout-align="center center">
+	    <label>{{singleCaseCtrl.labels.decision}}</label>
 	    <md-switch ng-model="singleCaseCtrl.caseStatus.decision" aria-label="decision" ng-true-value="'Approved'" ng-false-value="'Denied'" ng-change="singleCaseCtrl.changeLabels('decision'); singleCaseCtrl.setDueDate()"></md-switch>
 	  </div>
   </form>
 
-
 	<form name="caseForm" layout="column" layout-margin layout-padding>
+		<div layout="column" layout-gt-xs="row" layout-align="center center" class="inputField">
+			<md-whiteframe class="md-whiteframe-9dp inputFrame" flex layout-margin layout-padding>
+				<md-input-container class="inputLabelText">
+				  <label for="receivedDateInput">Received Date/Time</label>
+				  <input type="datetime-local" id="receivedDateInput" name="receivedDateInput" ng-model="singleCaseCtrl.caseStatus.receivedDate" ng-change="singleCaseCtrl.setDueDate()" min="{{singleCaseCtrl.restrictInput.receivedMinDate | date:'yyyy-MM-ddTHH:mm'}}" max="{{singleCaseCtrl.restrictInput.receivedMaxDate | date:'yyyy-MM-ddTHH:mm'}}" required>
+					<div ng-messages="caseForm.receivedDateInput.$error">
+		        <div ng-message="datetimelocal" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Not a valid date/time</span>
+		        </div>
+		        <div ng-message="min" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">That date/time was over a year ago</span>
+		        </div>
+		        <div ng-message="max" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">That date/time is over a year from now</span>
+		        </div>
+		        <div ng-message="required" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Required</span>
+		        </div>
+			    </div>
+				  <!-- <tt>min= {{restrictInput.receivedMinDate}}</tt><br>
+				  <tt>max= {{restrictInput.receivedMaxDate}}</tt><br>
+				  <tt>CMS format = {{caseStatus.receivedDate | date: "MMddyyyy HHmmss"}}</tt><br>
+				  <tt>caseForm.receivedDateInput.$valid = {{caseForm.receivedDateInput.$valid}}</tt><br>
+				  <tt>caseForm.receivedDateInput.$pristine = {{caseForm.receivedDateInput.$pristine}}</tt><br>
+				  <tt>caseForm.receivedDateInput.$error = {{caseForm.receivedDateInput.$error}}</tt><br> -->
+				</md-input-container>
+			</md-whiteframe>
 
-		<div layout="row" layout-align="center center" layout-margin layout-padding style="border: 1px solid black;">
-			<md-input-container class="inputLabelText" flex layout-margin layout-padding>
-			  <label for="receivedDateInput" style="color: black;">Received Date/Time</label>
-			  <input type="datetime-local" id="receivedDateInput" name="receivedDateInput" ng-model="singleCaseCtrl.caseStatus.receivedDate" ng-change="singleCaseCtrl.setDueDate()" min="{{singleCaseCtrl.restrictInput.receivedMinDate | date:'yyyy-MM-ddTHH:mm'}}" max="{{singleCaseCtrl.restrictInput.receivedMaxDate | date:'yyyy-MM-ddTHH:mm'}}" required style="color: black;">
-			  <!-- <span ng-show="caseForm.receivedDateInput.$error.required">
-					<h5>Required! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-				</span>
-				<span class="label label-warning col-md-12" ng-show="caseForm.receivedDateInput.$error.datetimelocal || caseForm.receivedDateInput.$error.min || caseForm.receivedDateInput.$error.max">
-					<h5>Not a valid date! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-				</span> -->
-			  <!-- <tt>min= {{restrictInput.receivedMinDate}}</tt><br>
-			  <tt>max= {{restrictInput.receivedMaxDate}}</tt><br>
-			  <tt>CMS format = {{caseStatus.receivedDate | date: "MMddyyyy HHmmss"}}</tt><br>
-			  <tt>caseForm.receivedDateInput.$valid = {{caseForm.receivedDateInput.$valid}}</tt><br>
-			  <tt>caseForm.receivedDateInput.$pristine = {{caseForm.receivedDateInput.$pristine}}</tt><br>
-			  <tt>caseForm.receivedDateInput.$error = {{caseForm.receivedDateInput.$error}}</tt><br> -->
-			</md-input-container>
-
-
-			<md-input-container class="inputLabelText" flex layout-margin layout-padding ng-if="singleCaseCtrl.caseStatus.exception">
-			  <label for="ssDateInput" style="color: black;">Supporting Statement Date/Time</label>
-			  <input type="datetime-local" id="ssDateInput" name="ssDateInput" ng-model="singleCaseCtrl.caseStatus.ssDate" ng-change="singleCaseCtrl.setDueDate()" min="{{singleCaseCtrl.caseStatus.receivedDate | date:'yyyy-MM-ddTHH:mm'}}" max="2020-12-31T00:00" ng-required="singleCaseCtrl.caseStatus.exception">
-			  <!-- <div role="alert">
-					<span class="label label-danger col-md-12" ng-show="caseForm.ssDateInput.$error.required">
-						<h5>Required! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-					</span>
-					<span class="label label-danger col-md-12" ng-show="caseForm.ssDateInput.$error.datetimelocal">
-						<h5>Not a valid date! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-					</span>
-			  </div> -->
-
-			</md-input-container>
+			<md-whiteframe class="md-whiteframe-9dp inputFrame" flex layout-margin layout-padding ng-if="singleCaseCtrl.caseStatus.exception">
+				<md-input-container class="inputLabelText">
+				  <label for="ssDateInput">Supporting Statement Date/Time</label>
+				  <input type="datetime-local" id="ssDateInput" name="ssDateInput" ng-model="singleCaseCtrl.caseStatus.ssDate" ng-change="singleCaseCtrl.setDueDate()" min="{{singleCaseCtrl.caseStatus.receivedDate | date:'yyyy-MM-ddTHH:mm'}}" max="{{singleCaseCtrl.restrictInput.receivedMaxDate | date:'yyyy-MM-ddTHH:mm'}}" ng-required="singleCaseCtrl.caseStatus.exception">
+			    <div ng-messages="caseForm.ssDateInput.$error">
+		        <div ng-message="datetimelocal" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Not a valid date/time</span>
+		        </div>
+		        <div ng-message="min" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Supporting Statement can't be prior to Received Date/Time</span>
+		        </div>
+		        <div ng-message="max" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">That date/time is over a year from now</span>
+		        </div>
+		        <div ng-message="required" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Required</span>
+		        </div>
+			    </div>
+				</md-input-container>
+			</md-whiteframe>
 		</div>
 
 
 
 
-		<div layout="row" layout-align="center center" layout-margin layout-padding style="border: 1px solid black;">
-			<md-input-container class="inputLabelText" flex layout-margin layout-padding>
-			  <label for="decisionDateInput" style="color: black;">Decision Date/Time</label>
-			  <input type="datetime-local" id="decisionDateInput" name="decisionDateInput" ng-model="singleCaseCtrl.caseStatus.decisionDate" ng-change="calcTimelyDecision(caseStatus)" min="{{singleCaseCtrl.caseStatus.receivedDate | date:'yyyy-MM-ddTHH:mm'}}" max="2020-12-31T00:00" required />
-			  <!-- <div role="alert">
-					<span class="label label-danger col-md-12" ng-show="caseForm.decisionDateInput.$error.required">
-						<h5>Required! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-					</span>
-					<span class="label label-danger col-md-12" ng-show="caseForm.decisionDateInput.$error.datetimelocal">
-						<h5>Not a valid date! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-					</span>
-					<div ng-show="singleCaseCtrl.caseStatus.dueDate && !caseForm.decisionDateInput.$pristine">
-						<span class="label label-success col-md-12" ng-show="singleCaseCtrl.caseStatus.timelyDecision">
-							<h5>Your decision was timely <i class="glyphicon glyphicon-ok"></i></h5>
-						</span>
-						<span class="label label-warning col-md-12" ng-show="!singleCaseCtrl.caseStatus.timelyDecision">
-							<h5>Your decision doesn't look timely <i class="glyphicon glyphicon-warning-sign"></i></h5>
-						</span>
-					</div>
-			  </div> -->
-			</md-input-container>
+		<div layout="row" layout-align="center center" class="inputField">
+			<md-whiteframe class="md-whiteframe-9dp inputFrame" flex layout-margin layout-padding>
+					<md-input-container class="inputLabelText">
+					  <label for="decisionDateInput">Decision Date/Time</label>
+					  <input type="datetime-local" id="decisionDateInput" name="decisionDateInput" ng-model="singleCaseCtrl.caseStatus.decisionDate" ng-change="singleCaseCtrl.setDueDate()" min="{{singleCaseCtrl.caseStatus.receivedDate | date:'yyyy-MM-ddTHH:mm'}}" max="2020-12-31T00:00" required>
+						<div ng-messages="caseForm.decisionDateInput.$error">
+			        <div ng-message="datetimelocal" layout="row">
+			        	<i class="material-icons">info</i>
+				        <span class="md-body-2">Not a valid date</span>
+			        </div>
+			        <div ng-message="min" layout="row">
+			        	<i class="material-icons">info</i>
+				        <span class="md-body-2">Decision Date/Time can't be prior to Received Date/Time</span>
+			        </div>
+			        <div ng-message="max" layout="row">
+			        	<i class="material-icons">info</i>
+				        <span class="md-body-2">That date/time is over a year from now</span>
+			        </div>
+			        <div ng-message="required" layout="row">
+			        	<i class="material-icons">info</i>
+				        <span class="md-body-2">Required</span>
+			        </div>
+				    </div>
+						<div ng-if="singleCaseCtrl.caseStatus.dueDate && caseForm.decisionDateInput.$valid" layout-padding>
+							<div class="timely" layout="row" ng-if="singleCaseCtrl.caseStatus.timelyDecision">
+								<i class="material-icons">check_circle</i>
+								<p>Your decision was timely</p>
+							</div>
+							<div class="untimely" layout="row" ng-if="!singleCaseCtrl.caseStatus.timelyDecision">
+								<i class="material-icons">info</i>
+								<p>Your decision doesn't look timely</p>
+							</div>
+						</div>
+					</md-input-container>
+			</md-whiteframe>
 
 
-			<md-input-container class="inputLabelText" flex layout-margin layout-padding ng-if="singleCaseCtrl.caseStatus.decision === 'Approved'">
-			  <label for="effectuationDateInput" style="color: black;">Effectuation Date/Time</label>
-			  <input type="datetime-local" id="effectuationDateInput" name="effectuationDateInput" ng-model="singleCaseCtrl.caseStatus.effectuationDate" ng-change="calcTimelyEffectuation(caseStatus)" min="{{singleCaseCtrl.caseStatus.receivedDate | date:'yyyy-MM-ddTHH:mm'}}" max="2020-12-31T00:00" ng-required="singleCaseCtrl.caseStatus.decision">
-			  <!-- <div role="alert">
-					<span class="label label-danger col-md-12" ng-show="caseForm.effectuationDateInput.$error.required">
-						<h5>Required! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-					</span>
-					<span class="label label-danger col-md-12" ng-show="caseForm.effectuationDateInput.$error.datetimelocal">
-						<h5>Not a valid date! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-					</span>
-					<div ng-show="singleCaseCtrl.caseStatus.dueDate && !caseForm.effectuationDateInput.$pristine">
-						<span class="label label-success col-md-12" ng-show="singleCaseCtrl.caseStatus.timelyEffectuation">
-							<h5>Your effectuation was timely <i class="glyphicon glyphicon-ok"></i></h5>
-						</span>
-						<span class="label label-warning col-md-12" ng-show="!singleCaseCtrl.caseStatus.timelyEffectuation">
-							<h5>Your effectuation doesn't look timely <i class="glyphicon glyphicon-warning-sign"></i></h5>
-						</span>
+			<md-whiteframe class="md-whiteframe-9dp inputFrame" flex layout-margin layout-padding ng-if="singleCaseCtrl.caseStatus.decision === 'Approved'">
+				<md-input-container class="inputLabelText">
+				  <label for="effectuationDateInput">Effectuation Date/Time</label>
+				  <input type="datetime-local" id="effectuationDateInput" name="effectuationDateInput" ng-model="singleCaseCtrl.caseStatus.effectuationDate" ng-change="singleCaseCtrl.setDueDate()" min="{{singleCaseCtrl.caseStatus.receivedDate | date:'yyyy-MM-ddTHH:mm'}}" max="2020-12-31T00:00" ng-required="singleCaseCtrl.caseStatus.decision">
+			    <div ng-messages="caseForm.effectuationDateInput.$error">
+		        <div ng-message="datetimelocal" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Not a valid date</span>
+		        </div>
+		        <div ng-message="min" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Effecutation Date/Time can't be prior to Received Date/Time</span>
+		        </div>
+		        <div ng-message="required" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Required</span>
+		        </div>
+			    </div>
+			    <div ng-if="singleCaseCtrl.caseStatus.dueDate && caseForm.effectuationDateInput.$valid" layout-padding>
+						<div class="timely" layout="row" ng-if="singleCaseCtrl.caseStatus.timelyEffectuation">
+							<i class="material-icons">check_circle</i>
+							<p>Your effectuation was timely</p>
+						</div>
+						<div class="untimely" layout="row" ng-if="!singleCaseCtrl.caseStatus.timelyEffectuation">
+							<i class="material-icons">info</i>
+							<p>Your effectuation doesn't look timely</p>
+						</div>
 					</div>
-			  </div> -->
-			</md-input-container>
+				</md-input-container>
+			</md-whiteframe>
 		</div>
 
 
-		<div layout="row" layout-align="center center" layout-margin layout-padding style="border: 1px solid black;">
-			<md-input-container class="inputLabelText" flex layout-margin layout-padding>
-			  <label for="oralNotificationDateInput" style="color: black;">Oral Notification Date/Time</label>
-			  <input type="datetime-local" id="oralNotificationDateInput" name="oralNotificationDateInput" ng-model="singleCaseCtrl.caseStatus.oralNotificationDate" ng-change="calcTimelyOralNotification(caseStatus)" min="{{singleCaseCtrl.caseStatus.receivedDate | date:'yyyy-MM-ddTHH:mm'}}" max="2020-12-31T00:00">
-			  <!-- <div role="alert">
-					<span class="label label-danger col-md-12" ng-show="caseForm.oralNotificationDateInput.$error.required">
-						<h5>Required! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-					</span>
-					<span class="label label-danger col-md-12" ng-show="caseForm.oralNotificationDateInput.$error.datetimelocal">
-						<h5>Not a valid date! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-					</span>
-					<div ng-show="singleCaseCtrl.caseStatus.dueDate && !caseForm.oralNotificationDateInput.$pristine">
-						<span class="label label-success col-md-12" ng-show="singleCaseCtrl.caseStatus.timelyOralNotification">
-							<h5>Your oral notification was timely <i class="glyphicon glyphicon-ok"></i></h5>
-						</span>
-						<span class="label label-warning col-md-12" ng-show="!singleCaseCtrl.caseStatus.timelyOralNotification">
-							<h5>Your oral notification doesn't look timely <i class="glyphicon glyphicon-warning-sign"></i></h5>
-						</span>
+		<div layout="row" layout-align="center center" class="inputField">
+			<md-whiteframe class="md-whiteframe-9dp inputFrame" flex layout-margin layout-padding>
+				<md-input-container class="inputLabelText">
+				  <label for="oralNotificationDateInput">Oral Notification Date/Time</label>
+				  <input type="datetime-local" id="oralNotificationDateInput" name="oralNotificationDateInput" ng-model="singleCaseCtrl.caseStatus.oralNotificationDate" ng-change="singleCaseCtrl.setDueDate()" min="{{singleCaseCtrl.caseStatus.receivedDate | date:'yyyy-MM-ddTHH:mm'}}" max="2020-12-31T00:00">
+				  <div ng-messages="caseForm.oralNotificationDateInput.$error">
+		        <div ng-message="datetimelocal" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Not a valid date</span>
+		        </div>
+		        <div ng-message="min" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Notification Date/Time can't be prior to Received Date/Time</span>
+		        </div>
+		        <div ng-message="required" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Required</span>
+		        </div>
+			    </div>
+			    <div ng-if="singleCaseCtrl.caseStatus.dueDate && caseForm.oralNotificationDateInput.$valid && !caseForm.oralNotificationDateInput.$pristine" layout-padding>
+						<div class="timely" layout="row" ng-if="singleCaseCtrl.caseStatus.timelyOralNotification">
+							<i class="material-icons">check_circle</i>
+							<p>Your notification was timely</p>
+						</div>
+						<div class="untimely" layout="row" ng-if="!singleCaseCtrl.caseStatus.timelyOralNotification">
+							<i class="material-icons">info</i>
+							<p>Your notification doesn't look timely</p>
+						</div>
 					</div>
-			  </div> -->
-			</md-input-container>
+				</md-input-container>
+			</md-whiteframe>
 
 
-			<md-input-container class="inputLabelText" flex layout-margin layout-padding>
-			  <label for="writtenNotificationDateInput" style="color: black;">Written Notification Date/Time</label>
-			  <input type="datetime-local" id="writtenNotificationDateInput" name="writtenNotificationDateInput" ng-model="singleCaseCtrl.caseStatus.writtenNotificationDate" ng-change="calcTimelyWrittenNotification(caseStatus)" min="{{singleCaseCtrl.caseStatus.receivedDate | date:'yyyy-MM-ddTHH:mm'}}" max="2020-12-31T00:00" required>
-			  <!-- <div role="alert">
-					<span class="label label-danger col-md-12" ng-show="caseForm.writtenNotificationDateInput.$error.required">
-						<h5>Required! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-					</span>
-					<span class="label label-danger col-md-12" ng-show="caseForm.writtenNotificationDateInput.$error.datetimelocal">
-						<h5>Not a valid date! <i class="glyphicon glyphicon-warning-sign"></i></h5>
-					</span>
-					<div ng-show="singleCaseCtrl.caseStatus.dueDate && !caseForm.writtenNotificationDateInput.$pristine">
-						<span class="label label-success col-md-12" ng-show="singleCaseCtrl.caseStatus.timelyWrittenNotification">
-							<h5>Your written notification was timely <i class="glyphicon glyphicon-ok"></i></h5>
-						</span>
-						<span class="label label-warning col-md-12" ng-show="!singleCaseCtrl.caseStatus.timelyWrittenNotification">
-							<h5>Your written notification doesn't look timely <i class="glyphicon glyphicon-warning-sign"></i></h5>
-						</span>
+			<md-whiteframe class="md-whiteframe-9dp inputFrame" flex layout-margin layout-padding>
+				<md-input-container class="inputLabelText">
+				  <label for="writtenNotificationDateInput">Written Notification Date/Time</label>
+				  <input type="datetime-local" id="writtenNotificationDateInput" name="writtenNotificationDateInput" ng-model="singleCaseCtrl.caseStatus.writtenNotificationDate" ng-change="singleCaseCtrl.setDueDate()" min="{{singleCaseCtrl.caseStatus.receivedDate | date:'yyyy-MM-ddTHH:mm'}}" max="2020-12-31T00:00" required>
+				  <div ng-messages="caseForm.writtenNotificationDateInput.$error">
+		        <div ng-message="datetimelocal" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Not a valid date</span>
+		        </div>
+		        <div ng-message="min" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Notification Date/Time can't be prior to Received Date/Time</span>
+		        </div>
+		        <div ng-message="required" layout="row">
+		        	<i class="material-icons">info</i>
+			        <span class="md-body-2">Required</span>
+		        </div>
+			    </div>
+			    <div ng-if="singleCaseCtrl.caseStatus.dueDate && caseForm.writtenNotificationDateInput.$valid" layout-padding>
+						<div class="timely" layout="row" ng-if="singleCaseCtrl.caseStatus.timelyWrittenNotification">
+							<i class="material-icons">check_circle</i>
+							<p>Your notification was timely</p>
+						</div>
+						<div class="untimely" layout="row" ng-if="!singleCaseCtrl.caseStatus.timelyWrittenNotification">
+							<i class="material-icons">info</i>
+							<p>Your notification doesn't look timely</p>
+						</div>
 					</div>
-			  </div> -->
-			</md-input-container>
+				</md-input-container>
+			</md-whiteframe>
 		</div>
 	</form>
 
 
+  <!--
 
+  DUE DATE
 
+   -->
+  <div layout="column" layout-gt-xs="row">
+		<div flex layout="column" layout-margin layout-padding layout-align="center center">
+			<md-switch ng-disabled="singleCaseCtrl.caseStatus.decision !== 'Approved'" ng-model="singleCaseCtrl.caseStatus.extendApproval" ng-change="singleCaseCtrl.setDueDate(); singleCaseCtrl.changeLabels('extendApproval')" flex>{{singleCaseCtrl.labels.extendApproval}}</md-switch>
+			<div flex ng-if="singleCaseCtrl.caseStatus.dueDate && caseForm.receivedDateInput.$valid">
+			  <h1 class="md-display-1 textCenter">The due date for this case is <b>{{singleCaseCtrl.caseStatus.dueDate | date: "mediumDate"}}</b> at <b>{{singleCaseCtrl.caseStatus.dueDate | date: "shortTime"}}</b></h1>
+			</div>
 
-<!--
-<div flex layout="column" layout-align="center center">
-	    <p>{{singleCaseCtrl.labels.extendApproval}}</p>
-	    <md-switch ng-model="singleCaseCtrl.singleCaseCtrl.caseStatus.extendApproval" aria-label="extendApproval" ng-change="singleCaseCtrl.changeLabels('extendApproval')"></md-switch>
-	  </div> -->
-
-
-
-	<form layout="column" layout-gt-xs="row" layout-margin layout-align="center center" ng-show="singleCaseCtrl.caseStatus.dueDate">
-		<div flex>
-		  <h1 class="md-display-1">The due date for this case is {{singleCaseCtrl.caseStatus.dueDate | date: "medium"}}</h1>
-		  <tt>caseForm.$valid = {{caseForm.$valid}}</tt><br>
-		  <tt>caseForm.$error.required = {{!!caseForm.$error.required}}</tt>
 		</div>
-		<div ng-show="singleCaseCtrl.caseStatus.decision === 'Approved'" flex>
-			<md-switch ng-model="singleCaseCtrl.caseStatus.extendApproval" ng-change="singleCaseCtrl.setDueDate(); singleCaseCtrl.changeLabels('extendApproval')">{{singleCaseCtrl.labels.extendApproval}}</md-switch>
-		</div>
-	</form>
+  </div>
 </div>
