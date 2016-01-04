@@ -1,8 +1,7 @@
-app.controller('universeDetailController', ['$stateParams', 'caseVault', function($stateParams, caseVault) {
+app.controller('universeDetailController', ['universeCaseNum', 'universeCase', function(universeCaseNum, universeCase) {
   var self = this;
-  console.log("$stateParams.index", $stateParams.index);
-  var caseID = $stateParams.index;
-  console.log("caseVault.getCase(caseID)", caseVault.getCase(caseID));
-  self.selectedRequest = caseVault.getCase(caseID);
-  console.log("self.selectedRequest", self.selectedRequest);
+  self.universeCaseNum = universeCaseNum;
+  self.universeCase = universeCase;
+  console.log("universeCaseNum", universeCaseNum);
+  console.log("universeCase", universeCase);
 }]);

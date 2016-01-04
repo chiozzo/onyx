@@ -1,0 +1,49 @@
+<div layout="row" layout-align="center center">
+	<md-whiteframe class="md-whiteframe-5dp inputFrame" flex layout-margin layout-padding layout="row">
+		<div flex>
+			<md-button class="md-primary md-raised" layout-padding ng-click="universeCtrl.showTabDialog($event, $index)">
+				View Details
+			</md-button>
+		</div>
+		<div flex>
+			<div class="timely" ng-if="request.timelyDecision" layout="row">
+				<span>Timely Decision </span>
+				<i class="material-icons">check_circle</i>
+			</div>
+			<div class="untimely" ng-if="!request.timelyDecision" layout="row">
+				<span>Untimely Decision </span>
+				<i class="material-icons">info</i>
+			</div>
+		</div>
+		<div flex>
+			<div class="timely" ng-if="request.timelyEffectuation" layout="row">
+				<span>Timely Effectuation </span>
+				<i class="material-icons">check_circle</i>
+			</div>
+			<div class="untimely" ng-if="!request.timelyEffectuation" layout="row">
+				<span>Untimely Effectuation </span>
+				<i class="material-icons">info</i>
+			</div>
+		</div>
+		<div flex>
+			<div class="timely" ng-if="request.timelyOralNotification" layout="row">
+				<span>Timely Oral Notice </span>
+				<i class="material-icons">check_circle</i>
+			</div>
+			<div class="untimely" ng-if="!request.timelyOralNotification" layout="row">
+				<span>Untimely Oral Notice </span>
+				<i class="material-icons">info</i>
+			</div>
+		</div>
+		<div flex>
+			<div class="timely" ng-if="request.timelyWrittenNotification" layout="row">
+				<span>Timely Written Notice </span>
+				<i class="material-icons">check_circle</i>
+			</div>
+			<div class="untimely" ng-if="!request.timelyWrittenNotification" layout="row">
+				<span>Untimely Written Notice </span>
+				<i class="material-icons">info</i>
+			</div>
+		</div>
+	</md-whiteframe>
+</div>

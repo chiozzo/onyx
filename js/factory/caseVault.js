@@ -46,6 +46,7 @@ app.factory('caseVault', [function() {
           SLA += hours24;
         }
         request.dueDate = new Date(receivedDate + SLA);
+        console.log("request.dueDate", request.dueDate);
       }
     } else if (caseType === 'RD') {
       if (reimbursement) {
@@ -92,7 +93,7 @@ app.factory('caseVault', [function() {
       var dueDate = request.dueDate;
 
       // Determine the actual received date based on exception status
-      if (request.exceptionRequest === true) {
+      if (request.exception === true) {
         receivedDate = request.ssDate;
       } else {
         receivedDate = request.receivedDate;
@@ -117,7 +118,7 @@ app.factory('caseVault', [function() {
       var dueDate = request.dueDate;
 
       // Determine the actual received date based on exception status
-      if (request.exceptionRequest === true) {
+      if (request.exception === true) {
         receivedDate = request.ssDate;
       } else {
         receivedDate = request.receivedDate;
@@ -142,7 +143,7 @@ app.factory('caseVault', [function() {
       var dueDate = request.dueDate;
 
       // Determine the actual received date based on exception status
-      if (request.exceptionRequest === true) {
+      if (request.exception === true) {
         receivedDate = request.ssDate;
       } else {
         receivedDate = request.receivedDate;
@@ -169,7 +170,7 @@ app.factory('caseVault', [function() {
       var writtenNotificationDate = request.writtenNotificationDate;
       var dueDate = request.dueDate;
 
-      if (request.exceptionRequest === true) {
+      if (request.exception === true) {
         receivedDate = request.ssDate;
       } else {
         receivedDate = request.receivedDate;
@@ -193,18 +194,19 @@ app.factory('caseVault', [function() {
     },
     setDueDate: function(request) {
       var receivedDate = null;
-      if (request.exceptionRequest) {
+      if (request.exception) {
         if (request.ssDate !== null) {
           receivedDate = request.ssDate;
           request = setSLA(receivedDate, request);
         }
-      } else if (!request.exceptionRequest) {
+      } else if (!request.exception) {
         if (request.receivedDate !== null) {
           receivedDate = request.receivedDate;
           request = setSLA(receivedDate, request);
         }
       }
       request = recalcTimelyCase(request);
+      // console.log("request", request);
       return request;
     }
   };

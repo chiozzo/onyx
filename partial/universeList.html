@@ -1,32 +1,28 @@
-<div class="container">
-	<div ng-include="'partial/fileUpload.html'"></div>
-
-	<div class="row well" ng-repeat="request in universeCtrl.universe">
-		<div class="col-md-2">
-			<label>First Name</label>
-			{{request['Beneficiary First Name']}}
-		</div>
-		<div class="col-md-1">
-			<a ng-href="#/universe/{{$index}}">
-				<label>$index</label>
-				{{$index}}
-			</a>
-		</div>
-		<div class="col-md-2">
-			<label> Timely Decision</label>
-			{{request.timelyDecision}}
-		</div>
-		<div class="col-md-2">
-			<label>Timely Effectuation</label>
-			{{request.timelyEffectuation}}
-		</div>
-		<div class="col-md-2">
-			<label>Timely Oral Notice</label>
-			{{request.timelyOralNotification}}
-		</div>
-		<div class="col-md-3">
-			<label>Timely Written Notice</label>
-			{{request.timelyWrittenNotification}}
-		</div>
+<div layout="row" layout-margin layout-padding>
+	<div flex>
+		<md-switch ng-model="universeCtrl.untimelyFilter.timelyDecision" aria-label="timelyDecisionFilter">Filter by Untimely Decisions</md-switch>
 	</div>
+	<div flex>
+		<md-switch ng-model="universeCtrl.untimelyFilter.timelyEffectuation" aria-label="timelyEffectuationFilter">Filter by Untimely Effectuation</md-switch>
+	</div>
+	<div flex>
+		<md-switch ng-model="universeCtrl.untimelyFilter.timelyNotification" aria-label="timelyNotificationFilter">Filter by Untimely Notification</md-switch>
+	</div>
+</div>
+
+
+<div ng-if="!universeCtrl.untimelyFilter.timelyDecision && !universeCtrl.untimelyFilter.timelyEffectuation && !universeCtrl.untimelyFilter.timelyNotification" ng-repeat="request in universeCtrl.universe">
+	<div ng-include="'partial/universeListing.html'"></div>
+</div>
+
+<div ng-if="universeCtrl.untimelyFilter.timelyDecision" ng-repeat="request in universeCtrl.universe | untimelyDecisionsFilter">
+	<div ng-include="'partial/universeListing.html'"></div>
+</div>
+
+<div ng-if="universeCtrl.untimelyFilter.timelyEffectuation" ng-repeat="request in universeCtrl.universe | untimelyEffectuationsFilter">
+	<div ng-include="'partial/universeListing.html'"></div>
+</div>
+
+<div ng-if="universeCtrl.untimelyFilter.timelyNotification" ng-repeat="request in universeCtrl.universe | untimelyNotificationsFilter">
+	<div ng-include="'partial/universeListing.html'"></div>
 </div>

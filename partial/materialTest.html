@@ -1,0 +1,313 @@
+<div ng-controller="sidenav" layout="column" ng-cloak="" class="sidenavdemoBasicUsage">
+  <section layout="row" flex="">
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+      <md-toolbar class="md-primary">
+        <h1 class="md-toolbar-tools">Upload a Universe</h1>
+      </md-toolbar>
+      <md-content layout-padding="">
+        <md-button ng-click="close()" class="md-primary" hide-gt-md="">
+          Close Sidenav Left
+        </md-button>
+        <div ng-include="'partial/fileUpload.html'" show-gt-md=""></div>
+      </md-content>
+    </md-sidenav>
+
+    <md-content flex="" layout-padding="">
+      <div layout="column" layout-fill="" layout-align="top center">
+        <p>The left sidenav should collapse at 960px per hide-md="" but actually collapses at 1407px.</p>
+        <div>
+          <md-button ng-click="toggleLeft()" class="md-fab md-primary" hide-gt-md="">
+              <md-icon md-svg-src="/lib/bower_components/angular-material/demos/toolbar/demoBasicUsage/img/icons/menu.svg"></md-icon>
+          </md-button>
+        </div>
+        <div>
+          <md-button ng-click="toggleRight()" ng-hide="isOpenRight()" class="md-accent">
+            Toggle right
+          </md-button>
+        </div>
+      </div>
+<md-divider md-inset></md-divider>
+      <div flex=""></div>
+
+    </md-content>
+
+    <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
+
+      <md-toolbar class="md-theme-orange">
+        <h1 class="md-toolbar-tools">Sidenav Right</h1>
+      </md-toolbar>
+      <md-content layout-padding="">
+        <form name="userForm">
+          <md-input-container>
+            <label>Last Name</label>
+            <input name="lastName" ng-model="lastName" required md-maxlength="10" minlength="4">
+            <div ng-messages="userForm.lastName.$error" ng-show="userForm.lastName.$dirty">
+              <div ng-message="required" class="md-warn">This is required!</div>
+              <div ng-message="md-maxlength" class="md-warn">That's too long!</div>
+              <div ng-message="minlength" class="md-warn">That's too short!</div>
+            </div>
+          </md-input-container>
+          <md-input-container>
+            <label>Biography</label>
+            <textarea name="bio" ng-model="biography" required md-maxlength="150"></textarea>
+            <div ng-messages="userForm.bio.$error" ng-show="userForm.bio.$dirty">
+              <div ng-message="required" class="md-warn">This is required!</div>
+              <div ng-message="md-maxlength" class="md-warn">That's too long!</div>
+            </div>
+          </md-input-container>
+          <md-input-container>
+            <input aria-label="title" ng-model="title">
+          </md-input-container>
+          <md-input-container>
+            <input placeholder="title" ng-model="title">
+          </md-input-container>
+        </form>
+        <md-button ng-click="close()" class="md-primary">
+          Close Sidenav Right
+        </md-button>
+      </md-content>
+
+    </md-sidenav>
+
+  </section>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div ng-controller="modal" class="md-padding dialogdemoBasicUsage" id="popupContainer" ng-cloak="" ng-app="MyApp">
+  <p class="inset">
+    Open a dialog over the app's content. Press escape or click outside to close the dialog and
+    send focus back to the triggering button.
+  </p>
+
+  <div class="dialog-demo-content" layout="row" layout-wrap="" layout-margin="">
+    <span flex="100" flex-gt-md="auto">
+      <md-button class="md-primary md-raised" ng-click="showAlert($event)">
+        Alert Dialog
+      </md-button>
+
+    </span>
+    <span flex="100" flex-gt-md="auto">
+      <md-button class="md-primary md-raised" ng-click="showConfirm($event)">
+        Confirm Dialog
+      </md-button>
+
+    </span>
+    <span flex="100" flex-gt-md="auto">
+      <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">
+        Custom Dialog
+      </md-button>
+
+    </span>
+    <div hide-gt-sm="" layout="row" layout-align="center center" flex="100">
+      <md-checkbox ng-model="customFullscreen" aria-label="Fullscreen Custom Dialog">
+        Custom Dialog Fullscreen
+      </md-checkbox>
+    </div>
+    <span flex="100" flex-gt-md="auto">
+      <md-button class="md-primary md-raised" ng-click="showTabDialog($event)">
+        Tab Dialog
+      </md-button>
+    </span>
+  </div>
+  <p class="footer">Note: The <b>Confirm</b> dialog does not use <code>$mdDialog.clickOutsideToClose(true)</code>.</p>
+
+
+  <div ng-if="status">
+    <br>
+    <b layout="row" layout-align="center center" class="md-padding">
+      {{status}}
+    </b>
+  </div>
+
+<script type="text/ng-template" id="dialog1.tmpl.html"><md-dialog aria-label="Mango (Fruit)"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Mango (Fruit)</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <h2>Using .md-dialog-content class that sets the padding as the spec</h2>
+        <p>
+          The mango is a juicy stone fruit belonging to the genus Mangifera, consisting of numerous tropical fruiting trees, cultivated mostly for edible fruit. The majority of these species are found in nature as wild mangoes. They all belong to the flowering plant family Anacardiaceae. The mango is native to South and Southeast Asia, from where it has been distributed worldwide to become one of the most cultivated fruits in the tropics.
+        </p>
+
+        <img style="margin: auto; max-width: 100%;" alt="Lush mango tree" src="img/mangues.jpg">
+
+        <p>
+          The highest concentration of Mangifera genus is in the western part of Malesia (Sumatra, Java and Borneo) and in Burma and India. While other Mangifera species (e.g. horse mango, M. foetida) are also grown on a more localized basis, Mangifera indica&mdash;the "common mango" or "Indian mango"&mdash;is the only mango tree commonly cultivated in many tropical and subtropical regions.
+        </p>
+        <p>
+          It originated in Indian subcontinent (present day India and Pakistan) and Burma. It is the national fruit of India, Pakistan, and the Philippines, and the national tree of Bangladesh. In several cultures, its fruit and leaves are ritually used as floral decorations at weddings, public celebrations, and religious ceremonies.
+        </p>
+      </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+        More on Wikipedia
+      </md-button>
+      <span flex></span>
+      <md-button ng-click="answer('not useful')">
+       Not Useful
+      </md-button>
+      <md-button ng-click="answer('useful')" style="margin-right:20px;">
+        Useful
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
+</script><script type="text/ng-template" id="tabDialog.tmpl.html"><md-dialog aria-label="Mango (Fruit)">
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Mango (Fruit)</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="/lib/bower_components/angular-material/demos/bottomSheet/demoBasicUsage/img/icons/upload.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content style="max-width:800px;max-height:810px; ">
+      <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="one">
+          <md-content class="md-padding">
+            <h1 class="md-display-2">Tab One</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi.</p>
+          </md-content>
+        </md-tab>
+        <md-tab label="two">
+          <md-content class="md-padding">
+            <h1 class="md-display-2">Tab Two</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor, orci enim rutrum enim, vel tempor sapien arcu a tellus. Vivamus convallis sodales ante varius gravida. Curabitur a purus vel augue ultrices ultricies id a nisl. Nullam malesuada consequat diam, a facilisis tortor volutpat et. Sed urna dolor, aliquet vitae posuere vulputate, euismod ac lorem. Sed felis risus, pulvinar at interdum quis, vehicula sed odio. Phasellus in enim venenatis, iaculis tortor eu, bibendum ante. Donec ac tellus dictum neque volutpat blandit. Praesent efficitur faucibus risus, ac auctor purus porttitor vitae. Phasellus ornare dui nec orci posuere, nec luctus mauris semper.</p>
+            <p>Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim, at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus. Nunc urna libero, viverra sit amet nisl at, hendrerit tempor turpis. Maecenas facilisis convallis mi vel tempor. Nullam vitae nunc leo. Cras sed nisl consectetur, rhoncus sapien sit amet, tempus sapien.</p>
+            <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+          </md-content>
+        </md-tab>
+        <md-tab label="three">
+          <md-content class="md-padding">
+            <h1 class="md-display-2">Tab Three</h1>
+            <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+          </md-content>
+        </md-tab>
+      </md-tabs>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+        More on Wikipedia
+      </md-button>
+      <span flex></span>
+      <md-button ng-click="answer('not useful')" >
+        Not Useful
+      </md-button>
+      <md-button ng-click="answer('useful')" style="margin-right:20px;" >
+        Useful
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
+</script></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="inset switchdemoBasicUsage" ng-controller="SwitchDemoCtrl" ng-cloak="">
+  <md-switch ng-model="data.cb1" aria-label="Switch 1">
+    Switch 1: {{ data.cb1 }}
+  </md-switch>
+
+  <md-switch ng-model="data.cb2" aria-label="Switch 2" ng-true-value="'yup'" ng-false-value="'nope'" class="md-warn">
+    Switch 2 (md-warn): {{ data.cb2 }}
+  </md-switch>
+
+  <md-switch ng-disabled="true" aria-label="Disabled switch" ng-model="disabledModel">
+    Switch (Disabled)
+  </md-switch>
+
+  <md-switch ng-disabled="true" aria-label="Disabled active switch" ng-model="data.cb4">
+    Switch (Disabled, Active)
+  </md-switch>
+
+  <md-switch class="md-primary" md-no-ink="" aria-label="Switch No Ink" ng-model="data.cb5">
+    Switch (md-primary): No Ink
+  </md-switch>
+
+  <md-switch ng-model="data.cb6" aria-label="Switch 6" ng-change="onChange(data.cb6)">
+    Switch 6 message: {{ message }}
+  </md-switch>
+</div>

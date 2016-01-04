@@ -1,31 +1,35 @@
-<div class="container">
-	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
-			<a href="#/universe">
-				<button>Back to Universe</button>
-			</a>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-3">
-			<label>First Name</label>
-			{{universeDetailCtrl.selectedRequest['Beneficiary First Name']}}
-		</div>
-		<div class="col-md-2">
-			<label> Timely Decision</label>
-			{{universeDetailCtrl.selectedRequest.timelyDecision}}
-		</div>
-		<div class="col-md-2">
-			<label>Timely Effectuation</label>
-			{{universeDetailCtrl.selectedRequest.timelyEffectuation}}
-		</div>
-		<div class="col-md-2">
-			<label>Timely Oral Notice</label>
-			{{universeDetailCtrl.selectedRequest.timelyOralNotification}}
-		</div>
-		<div class="col-md-3">
-			<label>Timely Written Notice</label>
-			{{universeDetailCtrl.selectedRequest.timelyWrittenNotification}}
-		</div>
-	</div>
-</div>
+<md-dialog aria-label="{{universeDetailCtrl.universeCaseNum + 1}}">
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools" layout="row">
+        <h2 flex>{{universeDetailCtrl.universeCase['Beneficiary First Name']}} {{universeDetailCtrl.universeCase['Beneficiary Last Name']}}</h2>
+        <span flex></span>
+        <h4 flex>HICN: {{universeDetailCtrl.universeCase.beneficiaryHICN}}</h4>
+      </div>
+    </md-toolbar>
+    <md-dialog-content class="universeDetailModal">
+      <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="timeliness">
+          <md-content class="md-padding">
+            <p class="md-headline"><b>Timeliness Information</b></p>
+            <p>This request was <b>{{universeDetailCtrl.universeCase.decision}}</b></p>
+            <p><b>Received Date/Time: </b>{{universeDetailCtrl.universeCase.receivedDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.receivedDate | date: "shortTime"}}</p>
+            <p><b>Decision Date/Time: </b>{{universeDetailCtrl.universeCase.decisionDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.decisionDate | date: "shortTime"}}</p>
+            <p><b>Effection Date/Time: </b>{{universeDetailCtrl.universeCase.effectuationDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.effectuationDate | date: "shortTime"}}</p>
+            <p><b>Oral Notification Date/Time: </b>{{universeDetailCtrl.universeCase.oralNotificationDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.oralNotificationDate | date: "shortTime"}}</p>
+            <p><b>Written Notification Date/Time: </b>{{universeDetailCtrl.universeCase.writtenNotificationDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.writtenNotificationDate | date: "shortTime"}}</p>
+            <p><b>Due Date/Time: </b>{{universeDetailCtrl.universeCase.dueDate | date: "mediumDate"}} {{universeDetailCtrl.universeCase.dueDate | date: "shortTime"}}</p>
+          </md-content>
+
+        </md-tab>
+        <md-tab label="drug">
+          <md-content class="md-padding">
+            <p class="md-headline"><b>Drug Information</b></p>
+            <p><b>Drug Requested: </b>{{universeDetailCtrl.universeCase["Drug Name, Strength & Dosage Form"]}}</p>
+            <p><b>Drug NDC-11: </b>{{universeDetailCtrl.universeCase.drugNDC}}</p>
+          </md-content>
+        </md-tab>
+      </md-tabs>
+    </md-dialog-content>
+  </form>
+</md-dialog>

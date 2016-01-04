@@ -1,32 +1,24 @@
-var app = angular.module('onyx', ['ui.router', 'ui.bootstrap']);
+var app = angular.module('onyx', ['ui.router', 'ngMaterial', 'ngMessages']);
 
-app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
 	$urlRouterProvider.otherwise('/');
 
 	$stateProvider
-  /**
-    .state('auditType', {
-      url: '/auditType',
-      //I want multiple templatesUrls and/or controllers
+    .state('home', {
+      url: '/',
+      templateUrl: 'partial/home.html'
     })
-   */
-    .state('fileUpload', {
-      url: '/fileUpload',
-      templateUrl: 'partial/fileUpload.html'
+    .state('materialTest', {
+      url: '/materialTest',
+      templateUrl: 'partial/materialTest.html',
     })
-		.state('singleCase', {
-			url:'/singleCase',
-			templateUrl: 'partial/singleCase.html',
-			controller: 'singleCaseController as singleCaseCtrl'
-		})
     .state('universeList', {
       url:'/universe',
       templateUrl: 'partial/universeList.html',
       controller: 'universeController as universeCtrl'
-    })
-    .state('universeCase', {
-      url:'/universe/:index',
-      templateUrl: 'partial/universeCase.html',
-      controller: 'universeDetailController as universeDetailCtrl'
     });
+    $mdThemingProvider.theme('default')
+    .primaryPalette('blue')
+    .accentPalette('purple')
+    .warnPalette('red');
 }]);

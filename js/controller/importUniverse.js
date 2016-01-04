@@ -119,6 +119,44 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
     }
   };
 
+  self.labels = {
+    caseType: null,
+    priority: 'Standard or Expedited?',
+    exception: 'Prior Auth or Exception?',
+    reimbursement: 'Preservice or Reimbursement?',
+    extendApproval: 'Late Approval?'
+  };
+
+  self.changeLabels = function(field) {
+    switch (field) {
+      case 'caseType': if(self.caseType === 'CD') {
+          self.labels.caseType = "Coverage Determination";
+        } else {
+          self.labels.caseType = "Redetermination";
+        } break;
+      case 'universeExpedited': if(self.universeExpedited) {
+          self.labels.priority = "Expedited";
+        } else {
+          self.labels.priority = "Standard";
+        } break;
+      case 'universeException': if(self.universeException) {
+          self.labels.exception = "Exception";
+        } else {
+          self.labels.exception = "Prior Authorization";
+        } break;
+      case 'universeReimbursement': if(self.universeReimbursement) {
+          self.labels.reimbursement = "Reimbursement";
+        } else {
+          self.labels.reimbursement = "Preservice";
+        } break;
+      case 'universeExtendedApproval': if(self.universeExtendedApproval) {
+          self.labels.extendApproval = "If Approved within 24 hours";
+        } else {
+          self.labels.extendApproval = "Without grace period";
+        } break;
+    }
+  };
+
 
 /**
  * parseInputFile is a copy pasta function and uses the directive 'onReadFile'.
@@ -143,10 +181,13 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
     // console.log("JSON.parse", universe);
     universe.map(function(request, index, array) {
       request.reimbursement = reimbursement;
-      request.exceptionRequest = exception;
+      request.exception = exception;
       request.extendApproval = extendApproval;
       request.caseType = caseType;
       request.priority = priority;
+      request.drugName = request["Drug Name, Strength & Dosage Form"];
+      request.drugNDC = request.NDC_11;
+      request.beneficiaryHICN = request["Beneficiary HICN"];
       request.decision = request["Was the case approved or denied?"];
       request.receivedDate = self.CMSToDate(request[universeType.receivedDate], request[universeType.receivedTime]);
       if (request[universeType.ssDate] !== null) {
@@ -170,8 +211,6 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
         exception = false;
         priority = false;
         self.universeType = 'DMRCD';
-        console.log("reimbursement", reimbursement);
-        console.log('DMRCD');
       } else {
         if (!exception) {
           if (priority === false) {
@@ -192,8 +231,6 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
       if (reimbursement) {
         priority = false;
         self.universeType = 'DMRRD';
-        console.log("reimbursement", reimbursement);
-        console.log('DMRRD');
       } else {
         if (priority === false) {
           self.universeType = 'SRD';
