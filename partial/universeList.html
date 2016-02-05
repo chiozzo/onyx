@@ -1,0 +1,28 @@
+<div layout="row" layout-margin layout-padding>
+	<div flex>
+		<md-switch ng-model="universeCtrl.untimelyFilter.timelyDecision" aria-label="timelyDecisionFilter">Filter by Untimely Decisions</md-switch>
+	</div>
+	<div flex>
+		<md-switch ng-model="universeCtrl.untimelyFilter.timelyEffectuation" aria-label="timelyEffectuationFilter">Filter by Untimely Effectuation</md-switch>
+	</div>
+	<div flex>
+		<md-switch ng-model="universeCtrl.untimelyFilter.timelyNotification" aria-label="timelyNotificationFilter">Filter by Untimely Notification</md-switch>
+	</div>
+</div>
+
+
+<div ng-if="!universeCtrl.untimelyFilter.timelyDecision && !universeCtrl.untimelyFilter.timelyEffectuation && !universeCtrl.untimelyFilter.timelyNotification" ng-repeat="request in universeCtrl.universe">
+	<div ng-include="'partial/universeListing.html'"></div>
+</div>
+
+<div ng-if="universeCtrl.untimelyFilter.timelyDecision" ng-repeat="request in universeCtrl.universe | untimelyDecisionsFilter">
+	<div ng-include="'partial/universeListing.html'"></div>
+</div>
+
+<div ng-if="universeCtrl.untimelyFilter.timelyEffectuation" ng-repeat="request in universeCtrl.universe | untimelyEffectuationsFilter">
+	<div ng-include="'partial/universeListing.html'"></div>
+</div>
+
+<div ng-if="universeCtrl.untimelyFilter.timelyNotification" ng-repeat="request in universeCtrl.universe | untimelyNotificationsFilter">
+	<div ng-include="'partial/universeListing.html'"></div>
+</div>

@@ -1,0 +1,16 @@
+<div ng-controller="sidenav" layout="column" ng-cloak="">
+  <section layout="row" flex="">
+    <md-sidenav class="md-sidenav-right md-whiteframe-z4" md-component-id="right" md-is-locked-open="$mdMedia('gt-lg')">
+      <md-toolbar class="md-primary">
+        <h1 class="md-toolbar-tools">Analyze a Universe</h1>
+      </md-toolbar>
+      <div ng-include="'partial/fileUpload.html'"></div>
+    </md-sidenav>
+    <md-content flex="" layout-padding="">
+    <div ng-include="'partial/singleCase.html'"></div>
+    </md-content>
+  </section>
+  <md-button aria-label="uploadNavToggle" ng-click="toggleRight()" class="md-fab md-primary uploadNavToggle" ng-hide="isOpenRight()">
+    <md-icon md-svg-src="/lib/bower_components/angular-material/demos/toolbar/demoBasicUsage/img/icons/menu.svg"></md-icon>
+  </md-button>
+</div>
