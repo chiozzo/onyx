@@ -16,6 +16,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', functi
       url:'/universe',
       templateUrl: 'partial/universeList.html',
       controller: 'universeController as universeCtrl'
+    })
+    .state('intro', {
+      url:'/intro',
+      templateUrl: 'intro.html'
     });
     $mdThemingProvider.theme('default')
     .primaryPalette('blue')
