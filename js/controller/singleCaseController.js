@@ -1,16 +1,46 @@
 app.controller('singleCaseController', ['caseVault', function (caseVault) {
   var self = this;
+
+  self.caseStatus = {
+    receivedDate: null,
+    ssDate: null,
+    decisionDate: null,
+    effectuationDate: null,
+    writtenNotificationDate: null,
+    oralNotificationDate: null,
+    timelyDecision: null,
+    timelyEffectuation: null,
+    timelyWrittenNotification: null,
+    timelyOralNotification: null,
+    caseType: null,
+    priority: null,
+    decision: null,
+    dueDate: null,
+    SLA: null,
+    // exception: "What's an exception?",
+    extendApproval: null
+  };
+
+  /**
+   * Set keywords for epoch time
+   */
   var hours24 = 86400000;
   var hours72 = 259200000;
   var days7   = 604800000;
   var days14  = 1209600000;
+
+  /**
+   * Set SLAs for case types
+   */
   var expeditedCDSLA = hours24;
   var standardCDSLA = hours72;
   var expeditedRDSLA = hours72;
   var standardRDSLA = days7;
   var DMRSLA = days14;
-  var today = new Date();
 
+  /**
+   * Labels for options in case form
+   */
   self.labels = {
     caseType: null,
     priority: 'Standard or Expedited?',
@@ -20,6 +50,9 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
     decision: 'Approved or Denied?'
   };
 
+  /**
+   * Method to change labels based on selections in case form
+   */
   self.changeLabels = function(field) {
     switch (field) {
       case 'caseType': if(self.caseStatus.caseType === 'CD') {
@@ -55,6 +88,10 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
     }
   };
 
+  /**
+   * Method to create min/max restrictions. Is this really the best idea? What if page is not refreshed for many days?
+   */
+  var today = new Date();
   self.restrictInput = null;
 
   self.makeRestrictions = function() {
@@ -67,38 +104,8 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
   self.makeRestrictions();
 
 
-  self.caseStatus = {
-    receivedDate: null,
-    ssDate: null,
-    decisionDate: null,
-    effectuationDate: null,
-    writtenNotificationDate: null,
-    oralNotificationDate: null,
-    timelyDecision: null,
-    timelyEffectuation: null,
-    timelyWrittenNotification: null,
-    timelyOralNotification: null,
-    caseType: null,
-    priority: null,
-    decision: null,
-    dueDate: null,
-    SLA: null,
-    // exception: "What's an exception?",
-    extendApproval: null
-  };
-
   self.setDueDate = function () {
     return caseVault.setDueDate(self.caseStatus);
   };
-
-
-
-/**
- * Since I'm no longer using the AngularUI Bootstrap Datepicker, this code is irrelevent, but it allows for multiple datepickers in one controller.
-
-  this.toggleOpen = function($event, which){
-    this.datePopupStatus[which] = ! this.datePopupStatus[which];
-  };
- */
 
 }]);
