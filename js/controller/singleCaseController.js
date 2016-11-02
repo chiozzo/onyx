@@ -80,7 +80,7 @@ app.controller('singleCaseController', ['caseVault', function (caseVault) {
         } else {
           self.labels.extendApproval = "No, I'd like to evaluate this case on the normal SLA.";
         } break;
-      case 'decision': if(self.caseStatus.decision) {
+      case 'decision': if(self.caseStatus.decision == 'Approved') {
           self.labels.decision = "Approved";
         } else {
           self.labels.decision = "Denied";

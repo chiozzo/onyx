@@ -50,16 +50,16 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
       ssTime: "Time prescriber supporting statement received"
     },
     ECD: {
-      receivedDate: "Date the request was received",
-      receivedTime: "Time the request was received",
-      decisionDate: "Date of plan decision",
-      decisionTime: "Time of plan decision",
-      effectuationDate: "Date effectuated in the plan's system",
-      effectuationTime: "Time effectuated in the plans' system",
-      oralNotificationDate: "Date oral notification provided to enrollee",
-      oralNotificationTime: "Time oral notification provided to enrollee",
-      writtenNotificationDate: "Date written notification provided to enrollee",
-      writtenNotificationTime: "Time written notification provided to enrollee",
+      receivedDate: "Date the Request was Received",
+      receivedTime: "Time the Request was Received",
+      decisionDate: "Date of Plan Decision",
+      decisionTime: "Time of Plan Decision",
+      effectuationDate: "Date Effectuated in the Plans' system",
+      effectuationTime: "Time Effectuated in the Plans' system",
+      oralNotificationDate: "Date Oral Notification provided to Enrollee",
+      oralNotificationTime: "Time Oral Notification provided to Enrollee",
+      writtenNotificationDate: "Date written Notification provided to Enrollee",
+      writtenNotificationTime: "Time written Notification provided to Enrollee",
       ssDate: "Date prescriber supporting statement received",
       ssTime: "Time prescriber supporting statement received"
     },
@@ -192,13 +192,13 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
         self.universeType = 'DMRCD';
       } else {
         if (!exception) {
-          if (priority === false) {
+          if (priority === false || priority === undefined) {
             self.universeType = 'SCD';
           } else if (priority === true) {
             self.universeType = 'ECD';
           }
         } else if (exception) {
-          if (priority === false) {
+          if (priority === false || priority === undefined) {
             self.universeType = 'SCDER';
           } else if(priority === true) {
             self.universeType = 'ECDER';
@@ -211,7 +211,7 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
         priority = false;
         self.universeType = 'DMRRD';
       } else {
-        if (priority === false) {
+        if (priority === false || priority === undefined) {
           self.universeType = 'SRD';
         } else if (priority === true) {
           self.universeType = 'ERD';
@@ -250,14 +250,14 @@ app.controller('importUniverse', ['caseVault', function(caseVault) {
       request.extendApproval = extendApproval;
       request.caseType = caseType;
       request.priority = priority;
-      request.drugName = request["Drug Name, Strength & Dosage Form"];
+      request.drugName = request["Drug Name Strength Dosage Form"];
       request.drugNDC = request.NDC_11;
       request.beneficiaryHICN = request["Beneficiary HICN"];
-      request.decision = request["Was the case approved or denied?"];
+      request.decision = request["Was the case approved or denied "];
       request.receivedDate = self.CMSToDate(request[universeType.receivedDate], request[universeType.receivedTime]);
-      if (request[universeType.ssDate] !== null) {
-        request.ssDate = self.CMSToDate(request[universeType.ssDate], request[universeType.ssTime]);
-      }
+      // if (request[universeType.ssDate] !== null) {
+      //   request.ssDate = self.CMSToDate(request[universeType.ssDate], request[universeType.ssTime]);
+      // }
       request.decisionDate = self.CMSToDate(request[universeType.decisionDate], request[universeType.decisionTime]);
       request.effectuationDate = self.CMSToDate(request[universeType.effectuationDate], request[universeType.effectuationTime]);
       request.oralNotificationDate = self.CMSToDate(request[universeType.oralNotificationDate], request[universeType.oralNotificationTime]);
